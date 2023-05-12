@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_maps_apar/source/network/network.dart';
 import 'package:flutter_maps_apar/source/pages/Maps/maps.dart';
 import 'package:flutter_maps_apar/source/repository/repository.dart';
 import 'package:flutter_maps_apar/source/router/router.dart';
 import 'package:flutter_maps_apar/source/router/string.dart';
+import 'package:flutter_maps_apar/source/services/Auth/cubit/auth_cubit.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -33,12 +35,19 @@ class MyApp extends StatelessWidget {
       );
     }
 
-    return GetMaterialApp(
-      theme: buildTheme(Brightness.light),
-      debugShowCheckedModeBanner: false,
-      initialRoute: SPLASH,
-      getPages: RouterNavigation.pages,
-      builder: EasyLoading.init(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => AuthCubit(myRepository: myRepository),
+        ),
+      ],
+      child: GetMaterialApp(
+        theme: buildTheme(Brightness.light),
+        debugShowCheckedModeBanner: false,
+        initialRoute: LOGIN,
+        getPages: RouterNavigation.pages,
+        builder: EasyLoading.init(),
+      ),
     );
   }
 }

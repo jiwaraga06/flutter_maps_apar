@@ -7,7 +7,7 @@
    <application
         android:label="flutter_maps_apar"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/apar">
         <activity
             android:name=".MainActivity"
             android:exported="true"
