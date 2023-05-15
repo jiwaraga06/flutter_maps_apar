@@ -1,4 +1,4 @@
-package com.flutter_maps_apar.flutter_maps_apar
+package com.monitoringapar.monitoringapar
 
 import io.flutter.embedding.android.FlutterActivity
 
