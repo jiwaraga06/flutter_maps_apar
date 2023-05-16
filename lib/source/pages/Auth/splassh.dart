@@ -24,7 +24,7 @@ class _SplashScreenState extends State<SplashScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Image.asset('assets/apar.jpg'),
+          Image.asset('assets/apar.jpg', height: 150),
           const SizedBox(height: 12.0),
           CupertinoActivityIndicator(),
         ],

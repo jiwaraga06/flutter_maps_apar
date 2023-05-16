@@ -3,10 +3,10 @@ import 'package:flutter_maps_apar/source/widget/color.dart';
 
 class CustomFormField extends StatelessWidget {
   final TextEditingController? controller;
-  final String? hint;
+  final String? hint, messageError;
   final bool? obscureText;
   final Widget? prefixIcon, suffixIcon;
-  CustomFormField({super.key, this.controller, this.hint, this.obscureText, this.prefixIcon, this.suffixIcon});
+  CustomFormField({super.key, this.controller, this.hint, this.obscureText, this.prefixIcon, this.suffixIcon, this.messageError});
 
   @override
   Widget build(BuildContext context) {
@@ -23,6 +23,12 @@ class CustomFormField extends StatelessWidget {
         ),
         border: OutlineInputBorder(),
       ),
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return messageError;
+        }
+        return null;
+      },
     );
   }
 }

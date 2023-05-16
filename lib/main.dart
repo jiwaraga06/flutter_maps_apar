@@ -7,6 +7,8 @@ import 'package:flutter_maps_apar/source/repository/repository.dart';
 import 'package:flutter_maps_apar/source/router/router.dart';
 import 'package:flutter_maps_apar/source/router/string.dart';
 import 'package:flutter_maps_apar/source/services/Auth/cubit/auth_cubit.dart';
+import 'package:flutter_maps_apar/source/services/Auth/cubit/profile_cubit.dart';
+import 'package:flutter_maps_apar/source/services/Auth/cubit/tabbar_cubit.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -30,7 +32,7 @@ class MyApp extends StatelessWidget {
         colorSchemeSeed: Colors.white,
       );
       return baseTheme.copyWith(
-        appBarTheme: AppBarTheme(backgroundColor: Colors.blue),
+        // appBarTheme: AppBarTheme(backgroundColor: Colors.blue),
         textTheme: GoogleFonts.latoTextTheme(baseTheme.textTheme),
       );
     }
@@ -40,11 +42,17 @@ class MyApp extends StatelessWidget {
         BlocProvider(
           create: (context) => AuthCubit(myRepository: myRepository),
         ),
+        BlocProvider(
+          create: (context) => ProfileCubit(),
+        ),
+        BlocProvider(
+          create: (context) => TabbarCubit(),
+        ),
       ],
       child: GetMaterialApp(
         theme: buildTheme(Brightness.light),
         debugShowCheckedModeBanner: false,
-        initialRoute: LOGIN,
+        initialRoute: SPLASH,
         getPages: RouterNavigation.pages,
         builder: EasyLoading.init(),
       ),
