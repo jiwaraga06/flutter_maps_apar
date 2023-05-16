@@ -1,3 +1,4 @@
+import 'package:flutter_maps_apar/source/pages/Auth/changePassword.dart';
 import 'package:flutter_maps_apar/source/pages/Auth/login.dart';
 import 'package:flutter_maps_apar/source/pages/Auth/splassh.dart';
 import 'package:flutter_maps_apar/source/pages/Dashboard/bottomNav.dart';
@@ -20,6 +21,11 @@ class RouterNavigation {
       name: BOTTOM_NAV,
       page: () => CustomBottomNav(),
       transition: Transition.size,
+    ),
+    GetPage(
+      name: CHANGE_PASSWORD,
+      page: () => ChangePassword(),
+      transition: Transition.rightToLeft,
     ),
   ];
 }

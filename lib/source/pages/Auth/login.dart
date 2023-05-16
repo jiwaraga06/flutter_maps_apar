@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_maps_apar/source/services/Auth/cubit/auth_cubit.dart';
 import 'package:flutter_maps_apar/source/widget/color.dart';
+import 'package:flutter_maps_apar/source/widget/copyright.dart';
 import 'package:flutter_maps_apar/source/widget/customButton.dart';
 import 'package:flutter_maps_apar/source/widget/customDialog.dart';
 import 'package:flutter_maps_apar/source/widget/customForm.dart';
@@ -64,7 +65,7 @@ class _LoginState extends State<Login> {
                     // const SizedBox(height: 120),
                     Image.asset('assets/apar.jpg', height: 150),
                     const SizedBox(height: 12),
-                    const Text('Monitoring Apar', style: TextStyle(fontSize: 20)),
+                    const Text('Monitoring Apar', style: TextStyle(fontSize: 30, fontWeight: FontWeight.w600)),
                     const SizedBox(height: 20),
                   ],
                 ),
@@ -120,18 +121,7 @@ class _LoginState extends State<Login> {
                     ),
                   ),
                   const SizedBox(height: 8),
-                  Container(
-                    height: 50,
-                    color: Colors.blue,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: const [
-                        Icon(Icons.copyright, color: Colors.white),
-                        Text(' IT DEPARTMENT | PT Sipatex Putri Lestari | ', style: TextStyle(color: Colors.white, fontSize: 15)),
-                        // Text('V 1.0', style: TextStyle(color: Colors.white, fontSize: 15)),
-                      ],
-                    ),
-                  ),
+                  const Copyright(),
                   const SizedBox(height: 8),
                 ],
               ),

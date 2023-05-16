@@ -6,7 +6,7 @@ class CustomFormField extends StatelessWidget {
   final String? hint, messageError;
   final bool? obscureText;
   final Widget? prefixIcon, suffixIcon;
-  CustomFormField({super.key, this.controller, this.hint, this.obscureText, this.prefixIcon, this.suffixIcon, this.messageError});
+  const CustomFormField({super.key, this.controller, this.hint, this.obscureText, this.prefixIcon, this.suffixIcon, this.messageError});
 
   @override
   Widget build(BuildContext context) {
@@ -15,13 +15,13 @@ class CustomFormField extends StatelessWidget {
       obscureText: obscureText!,
       decoration: InputDecoration(
         hintText: hint,
-        contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+        contentPadding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
         prefixIcon: prefixIcon,
         suffixIcon: suffixIcon,
-        focusedBorder: OutlineInputBorder(
+        focusedBorder: const OutlineInputBorder(
           borderSide: BorderSide(color: color1, width: 2),
         ),
-        border: OutlineInputBorder(),
+        border: const OutlineInputBorder(),
       ),
       validator: (value) {
         if (value == null || value.isEmpty) {

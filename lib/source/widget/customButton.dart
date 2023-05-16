@@ -15,7 +15,7 @@ class CustomButon extends StatelessWidget {
       splashColor: splashColor,
       borderRadius: BorderRadius.circular(6.0),
       child: Ink(
-        height: 50,
+        height: 45,
         decoration: BoxDecoration(
           color: color,
           borderRadius: BorderRadius.circular(6.0),

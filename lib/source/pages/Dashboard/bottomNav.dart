@@ -6,6 +6,7 @@ import 'package:flutter_maps_apar/source/pages/Dashboard/home.dart';
 import 'package:flutter_maps_apar/source/pages/Dashboard/profile.dart';
 import 'package:flutter_maps_apar/source/pages/Dashboard/user.dart';
 import 'package:flutter_maps_apar/source/services/Auth/cubit/tabbar_cubit.dart';
+import 'package:flutter_maps_apar/source/widget/color.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class CustomBottomNav extends StatefulWidget {
@@ -33,53 +34,60 @@ class _CustomBottomNavState extends State<CustomBottomNav> {
         }
         var user_roles = jsonDecode((state as TabbarLoaded).json);
         print(user_roles);
-        return Scaffold(
+        return Scaffold(extendBody: true,
           // body: _widgetOptions0.elementAt(index),
           body: [
             if (user_roles.where((e) => e == 'admin').toList().isNotEmpty) Home(),
             if (user_roles.where((e) => e == 'user').toList().isNotEmpty) User(),
             Profile(),
           ].elementAt(index),
-          bottomNavigationBar: BottomNavigationBar(
-            type: BottomNavigationBarType.fixed,
-            unselectedItemColor: Colors.grey,
-            selectedItemColor: const Color(0XFF27496D),
-            selectedLabelStyle: const TextStyle(fontSize: 15, color: Color(0XFF27496D)),
-            unselectedLabelStyle: const TextStyle(fontSize: 14, color: Colors.grey),
-            currentIndex: index,
-            onTap: (value) {
-              setState(() {
-                index = value;
-              });
-            },
-            items: [
-              if (user_roles.where((e) => e == 'admin').toList().isNotEmpty)
-                const BottomNavigationBarItem(
-                  icon: Icon(Icons.add),
-                  activeIcon: Icon(
-                    Icons.add,
-                    color: Color(0XFF27496D),
+          bottomNavigationBar: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(8.0),
+              child: BottomNavigationBar(
+                backgroundColor: navbar,
+                type: BottomNavigationBarType.fixed,
+                unselectedItemColor: Colors.grey[350],
+                selectedItemColor: Colors.white,
+                selectedLabelStyle: const TextStyle(fontSize: 15, color: Colors.white),
+                unselectedLabelStyle: TextStyle(fontSize: 14, color: Colors.grey[100]),
+                currentIndex: index,
+                onTap: (value) {
+                  setState(() {
+                    index = value;
+                  });
+                },
+                items: [
+                  if (user_roles.where((e) => e == 'admin').toList().isNotEmpty)
+                    const BottomNavigationBarItem(
+                      icon: Icon(Icons.add),
+                      activeIcon: Icon(
+                        Icons.add,
+                        color: Colors.white,
+                      ),
+                      label: 'Admin',
+                    ),
+                  if (user_roles.where((e) => e == 'user').toList().isNotEmpty)
+                    const BottomNavigationBarItem(
+                      icon: Icon(Icons.qr_code_scanner),
+                      activeIcon: Icon(
+                        Icons.qr_code_scanner,
+                        color: Colors.white,
+                      ),
+                      label: 'User',
+                    ),
+                  const BottomNavigationBarItem(
+                    icon: Icon(FontAwesomeIcons.user),
+                    activeIcon: Icon(
+                      FontAwesomeIcons.user,
+                      color: Colors.white,
+                    ),
+                    label: 'Profile',
                   ),
-                  label: 'Admin',
-                ),
-              if (user_roles.where((e) => e == 'user').toList().isNotEmpty)
-                const BottomNavigationBarItem(
-                  icon: Icon(Icons.qr_code_scanner),
-                  activeIcon: Icon(
-                    Icons.qr_code_scanner,
-                    color: Color(0XFF27496D),
-                  ),
-                  label: 'User',
-                ),
-              BottomNavigationBarItem(
-                icon: Icon(FontAwesomeIcons.user),
-                activeIcon: Icon(
-                  FontAwesomeIcons.user,
-                  color: Color(0XFF27496D),
-                ),
-                label: 'Profile',
+                ],
               ),
-            ],
+            ),
           ),
         );
       },

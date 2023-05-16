@@ -20,7 +20,7 @@ class Profile extends StatefulWidget {
 
 class _ProfileState extends State<Profile> {
   void logout(username) {
-    BlocProvider.of<AuthCubit>(context).logout(username);
+    BlocProvider.of<AuthCubit>(context).logout(context, username);
   }
 
   @override
@@ -64,6 +64,7 @@ class _ProfileState extends State<Profile> {
               return Container();
             }
             var data = (state as ProfileLoaded).json;
+            var user_role = jsonDecode(data['user_roles']);
             return ListView(
               children: [
                 Padding(
@@ -102,7 +103,7 @@ class _ProfileState extends State<Profile> {
                                   Icon(FontAwesomeIcons.mars, color: Colors.blue, size: 20),
                                 ],
                               ),
-                            if (data['gender'] == 'm')
+                            if (data['gender'] == 'p')
                               Row(
                                 children: [
                                   Text('Perempuan ', style: const TextStyle(fontSize: 16)),
@@ -123,10 +124,10 @@ class _ProfileState extends State<Profile> {
                                     shrinkWrap: true,
                                     physics: NeverScrollableScrollPhysics(),
                                     scrollDirection: Axis.horizontal,
-                                    itemCount: jsonDecode(data['user_roles']).length,
+                                    itemCount: user_role.length,
                                     itemBuilder: (context, index) {
                                       var role = jsonDecode(data['user_roles'])[index];
-                                      return Text('$role ,');
+                                      return Text('$role ,', style: const TextStyle(fontSize: 16));
                                     },
                                   ),
                                 ),
@@ -137,6 +138,18 @@ class _ProfileState extends State<Profile> {
                         ],
                       ),
                     ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: CustomButon(
+                    color: color2,
+                    splashColor: Colors.green[700],
+                    text: 'Ganti Sandi',
+                    onTap: () {
+                      Navigator.pushNamed(context, CHANGE_PASSWORD, arguments: {'username': data['username']});
+                    },
+                    textStyle: TextStyle(color: Colors.white, fontSize: 17),
                   ),
                 ),
                 Padding(

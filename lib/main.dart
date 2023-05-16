@@ -7,10 +7,12 @@ import 'package:flutter_maps_apar/source/repository/repository.dart';
 import 'package:flutter_maps_apar/source/router/router.dart';
 import 'package:flutter_maps_apar/source/router/string.dart';
 import 'package:flutter_maps_apar/source/services/Auth/cubit/auth_cubit.dart';
+import 'package:flutter_maps_apar/source/services/Auth/cubit/change_pass_cubit.dart';
 import 'package:flutter_maps_apar/source/services/Auth/cubit/profile_cubit.dart';
-import 'package:flutter_maps_apar/source/services/Auth/cubit/tabbar_cubit.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+
+import 'source/services/Auth/cubit/tabbar_cubit.dart';
 
 void main() {
   runApp(MyApp(
@@ -40,13 +42,16 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (context) => AuthCubit(myRepository: myRepository),
-        ),
-        BlocProvider(
           create: (context) => ProfileCubit(),
         ),
         BlocProvider(
           create: (context) => TabbarCubit(),
+        ),
+        BlocProvider(
+          create: (context) => AuthCubit(myRepository: myRepository),
+        ),
+        BlocProvider(
+          create: (context) => ChangePassCubit(myRepository: myRepository),
         ),
       ],
       child: GetMaterialApp(

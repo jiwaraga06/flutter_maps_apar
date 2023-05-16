@@ -56,7 +56,7 @@ class AuthCubit extends Cubit<AuthState> {
     });
   }
 
-  void logout(username) async {
+  void logout(context,username) async {
     SharedPreferences pref = await SharedPreferences.getInstance();
     emit(LogoutLoading());
     myRepository!.logout(username).then((value) {
