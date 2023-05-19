@@ -40,12 +40,11 @@ class MyApp extends StatelessWidget {
         scaffoldBackgroundColor: Colors.white,
       );
       return baseTheme.copyWith(
-        appBarTheme: AppBarTheme(
+        appBarTheme: const AppBarTheme(
           elevation: 6.0,
           backgroundColor: scaffoldColor,
           surfaceTintColor: scaffoldColor,
         ),
-        
         textTheme: GoogleFonts.latoTextTheme(baseTheme.textTheme),
       );
     }

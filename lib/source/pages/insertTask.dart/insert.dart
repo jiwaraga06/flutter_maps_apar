@@ -45,7 +45,7 @@ class _InsertState extends State<Insert> {
   @override
   void initState() {
     super.initState();
-    date = DateFormat('yyy-mm-dd H:m:s').format(DateTime.now());
+    date = DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now());
     print(date);
   }
 
