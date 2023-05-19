@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 
-class Home extends StatefulWidget {
-  const Home({super.key});
+class History extends StatefulWidget {
+  const History({super.key});
 
   @override
-  State<Home> createState() => _HomeState();
+  State<History> createState() => _HistoryState();
 }
 
-class _HomeState extends State<Home> {
+class _HistoryState extends State<History> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Home'),
+        title: Text('Riwayat'),
       ),
       body: ListView(
         children: [],

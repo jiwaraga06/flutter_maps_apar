@@ -19,4 +19,14 @@ class MyRepository {
     var json = await myNetwork!.changePassword(username, password, newPassword);
     return json;
   }
+
+  Future scanqr(ref, inisial) async {
+    var json = await myNetwork!.scanqr(ref, inisial);
+    return json;
+  }
+
+  Future insertTask(body) async {
+    var json = await myNetwork!.insertTask(body);
+    return json;
+  }
 }

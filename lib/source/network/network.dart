@@ -74,4 +74,53 @@ class MyNetwork {
       EasyLoading.showError(e.toString(), duration: const Duration(seconds: 2));
     }
   }
+
+  Future scanqr(ref, inisial) async {
+    try {
+      var url = Uri.parse(MyApi.scanqr(ref, inisial));
+      var response = await http.post(url, headers: {
+        'Authorization': TOKEN,
+        'Accept': 'application/json',
+      });
+      return response;
+    } on TimeoutException {
+      EasyLoading.dismiss();
+      EasyLoading.showError('Masalah Koneksi \n Jaringan lemah', duration: const Duration(seconds: 2));
+    } on SocketException {
+      EasyLoading.dismiss();
+      EasyLoading.showError('Masalah Koneksi \n data mati', duration: const Duration(seconds: 2));
+    } on HttpException catch (e) {
+      EasyLoading.dismiss();
+      EasyLoading.showError(e.message, duration: const Duration(seconds: 2));
+    } on Error catch (e) {
+      EasyLoading.dismiss();
+      EasyLoading.showError(e.toString(), duration: const Duration(seconds: 2));
+    }
+  }
+
+  Future insertTask(body) async {
+    try {
+      var url = Uri.parse(MyApi.insertTask());
+      var response = await http.post(url,
+          headers: {
+            'Authorization': TOKEN,
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+          },
+          body: body);
+      return response;
+    } on TimeoutException {
+      EasyLoading.dismiss();
+      EasyLoading.showError('Masalah Koneksi \n Jaringan lemah', duration: const Duration(seconds: 2));
+    } on SocketException {
+      EasyLoading.dismiss();
+      EasyLoading.showError('Masalah Koneksi \n data mati', duration: const Duration(seconds: 2));
+    } on HttpException catch (e) {
+      EasyLoading.dismiss();
+      EasyLoading.showError(e.message, duration: const Duration(seconds: 2));
+    } on Error catch (e) {
+      EasyLoading.dismiss();
+      EasyLoading.showError(e.toString(), duration: const Duration(seconds: 2));
+    }
+  }
 }

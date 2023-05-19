@@ -80,6 +80,8 @@ class _ChangePasswordState extends State<ChangePassword> {
                             controller: controllerUsername,
                             obscureText: false,
                             decoration: const InputDecoration(
+                              filled: true,
+                              fillColor: Colors.white,
                               hintText: "Username Anda",
                               contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
                               prefixIcon: Icon(Icons.account_circle),
@@ -93,7 +95,8 @@ class _ChangePasswordState extends State<ChangePassword> {
                           CustomFormField(
                             controller: controllerOldPass,
                             hint: 'Masukan Kata Sandi Lama',
-                            messageError: 'Kolon tidak boleh kosong',
+                            label: 'Sandi Lama',
+                            messageError: 'Kolom tidak boleh kosong',
                             obscureText: isShowPassOld,
                             prefixIcon: const Icon(Icons.key),
                             suffixIcon: InkWell(
@@ -108,7 +111,8 @@ class _ChangePasswordState extends State<ChangePassword> {
                           CustomFormField(
                             controller: controllerNewPass,
                             hint: 'Masukan Kata Sandi Baru',
-                            messageError: 'Kolon tidak boleh kosong',
+                            label: 'Sandi Baru',
+                            messageError: 'Kolom tidak boleh kosong',
                             obscureText: isShowPassNew,
                             prefixIcon: const Icon(Icons.key),
                             suffixIcon: InkWell(
@@ -127,7 +131,7 @@ class _ChangePasswordState extends State<ChangePassword> {
                 const SizedBox(height: 12),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: CustomButon(
+                  child: CustomButton(
                     text: 'SAVE',
                     textStyle: TextStyle(fontSize: 17, color: Colors.white),
                     onTap: save,

@@ -31,7 +31,6 @@ class _LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
       body: BlocListener<AuthCubit, AuthState>(
         listener: (context, state) {
           if (state is LoginLoading) {
@@ -84,7 +83,7 @@ class _LoginState extends State<Login> {
                         children: [
                           CustomFormField(
                             controller: controllerUsername,
-                            messageError: 'Kolon tidak boleh kosong',
+                            messageError: 'Kolom tidak boleh kosong',
                             hint: 'Masukan Barcode',
                             obscureText: false,
                             prefixIcon: const Icon(Icons.account_circle),
@@ -92,7 +91,7 @@ class _LoginState extends State<Login> {
                           const SizedBox(height: 10),
                           CustomFormField(
                             controller: controllerPassword,
-                            messageError: 'Kolon tidak boleh kosong',
+                            messageError: 'Kolom tidak boleh kosong',
                             hint: 'Masukan Password',
                             obscureText: isshowPassword,
                             prefixIcon: const Icon(Icons.key),
@@ -111,7 +110,7 @@ class _LoginState extends State<Login> {
                   const SizedBox(height: 40),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: CustomButon(
+                    child: CustomButton(
                       text: 'LOGIN',
                       textStyle: const TextStyle(fontSize: 17, color: Colors.white),
                       color: colorBtnOk,

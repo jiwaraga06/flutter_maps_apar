@@ -2,9 +2,10 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_maps_apar/source/pages/Dashboard/home.dart';
+import 'package:flutter_maps_apar/source/pages/Dashboard/history.dart';
+import 'package:flutter_maps_apar/source/pages/Dashboard/pemeriksaan.dart';
 import 'package:flutter_maps_apar/source/pages/Dashboard/profile.dart';
-import 'package:flutter_maps_apar/source/pages/Dashboard/user.dart';
+import 'package:flutter_maps_apar/source/pages/Dashboard/task.dart';
 import 'package:flutter_maps_apar/source/services/Auth/cubit/tabbar_cubit.dart';
 import 'package:flutter_maps_apar/source/widget/color.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -39,6 +40,7 @@ class _CustomBottomNavState extends State<CustomBottomNav> {
           body: [
             if (user_roles.where((e) => e == 'admin').toList().isNotEmpty) Home(),
             if (user_roles.where((e) => e == 'user').toList().isNotEmpty) User(),
+            History(),
             Profile(),
           ].elementAt(index),
           bottomNavigationBar: Padding(
@@ -61,26 +63,34 @@ class _CustomBottomNavState extends State<CustomBottomNav> {
                 items: [
                   if (user_roles.where((e) => e == 'admin').toList().isNotEmpty)
                     const BottomNavigationBarItem(
-                      icon: Icon(Icons.add),
+                      icon: Icon(FontAwesomeIcons.add),
                       activeIcon: Icon(
-                        Icons.add,
+                        FontAwesomeIcons.add,
                         color: Colors.white,
                       ),
-                      label: 'Admin',
+                      label: 'Pemeriksaan',
                     ),
                   if (user_roles.where((e) => e == 'user').toList().isNotEmpty)
                     const BottomNavigationBarItem(
-                      icon: Icon(Icons.qr_code_scanner),
+                      icon: Icon(FontAwesomeIcons.clipboardList),
                       activeIcon: Icon(
-                        Icons.qr_code_scanner,
+                        FontAwesomeIcons.clipboardList,
                         color: Colors.white,
                       ),
-                      label: 'User',
+                      label: 'Task',
                     ),
                   const BottomNavigationBarItem(
-                    icon: Icon(FontAwesomeIcons.user),
+                    icon: Icon(FontAwesomeIcons.history),
                     activeIcon: Icon(
-                      FontAwesomeIcons.user,
+                      FontAwesomeIcons.history,
+                      color: Colors.white,
+                    ),
+                    label: 'Riwayat',
+                  ),
+                  const BottomNavigationBarItem(
+                    icon: Icon(FontAwesomeIcons.users),
+                    activeIcon: Icon(
+                      FontAwesomeIcons.users,
                       color: Colors.white,
                     ),
                     label: 'Profile',

@@ -71,14 +71,14 @@ class _ProfileState extends State<Profile> {
                   padding: const EdgeInsets.all(8.0),
                   child: Card(
                     color: Colors.white,
-                    surfaceTintColor: Colors.white,
-                    elevation: 1,
+                    surfaceTintColor: Colors.grey[100],
+                    elevation: 2,
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Table(
                         columnWidths: const {
                           0: FixedColumnWidth(90),
-                          1: FixedColumnWidth(10),
+                          1: FixedColumnWidth(15),
                         },
                         // border: TableBorder.all(width: ),
                         children: [
@@ -132,17 +132,17 @@ class _ProfileState extends State<Profile> {
                                   ),
                                 ),
                               ),
-                            )
-                            // Text(jsonDecode(data['user_roles']).length. toString(), style: const TextStyle(fontSize: 16)),
+                            ),
                           ]),
                         ],
                       ),
                     ),
                   ),
                 ),
+                const SizedBox(height: 8.0),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: CustomButon(
+                  child: CustomButton(
                     color: color2,
                     splashColor: Colors.green[700],
                     text: 'Ganti Sandi',
@@ -152,9 +152,10 @@ class _ProfileState extends State<Profile> {
                     textStyle: TextStyle(color: Colors.white, fontSize: 17),
                   ),
                 ),
+                const SizedBox(height: 8.0),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: CustomButon(
+                  child: CustomButton(
                     color: colorBtnCancel,
                     splashColor: Colors.red[800],
                     text: 'Logout',
