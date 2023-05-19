@@ -137,6 +137,9 @@ class _InsertState extends State<Insert> {
                           },
                         );
                       }
+                      setState(() {
+                        widget.isitask;
+                      });
                     },
                   ),
                 )

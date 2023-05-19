@@ -35,7 +35,8 @@ class _CustomBottomNavState extends State<CustomBottomNav> {
         }
         var user_roles = jsonDecode((state as TabbarLoaded).json);
         print(user_roles);
-        return Scaffold(extendBody: true,
+        return Scaffold(
+          // extendBody: true,
           // body: _widgetOptions0.elementAt(index),
           body: [
             if (user_roles.where((e) => e == 'admin').toList().isNotEmpty) Home(),
@@ -44,7 +45,7 @@ class _CustomBottomNavState extends State<CustomBottomNav> {
             Profile(),
           ].elementAt(index),
           bottomNavigationBar: Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.only(left: 8.0, right: 8.0, bottom: 4.0),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(8.0),
               child: BottomNavigationBar(

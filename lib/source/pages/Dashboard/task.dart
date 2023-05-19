@@ -75,15 +75,15 @@ class _UserState extends State<User> {
     }
   }
 
-  void save(ref, inisial) {
-    BlocProvider.of<InsertaskCubit>(context).saveTask(ref, inisial, isiTask);
+  void save(ref, inisial, datatask) {
+    BlocProvider.of<InsertaskCubit>(context).saveTask(ref, inisial, isiTask, datatask);
   }
 
-  
   @override
   void initState() {
     super.initState();
     date = DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now());
+    BlocProvider.of<ScanqrCubit>(context).inisialisasi();
   }
 
   @override
@@ -112,76 +112,73 @@ class _UserState extends State<User> {
             }
           }
         },
-        child: Container(
-          margin: EdgeInsets.only(bottom: 60.0),
-          child: BlocBuilder<ScanqrCubit, ScanqrState>(builder: (context, state) {
-            if (state is ScanqrLoading) {
-              return FloatingActionButton(
-                onPressed: () {
-                  BlocProvider.of<ScanqrCubit>(context).scanqr();
-                },
-                backgroundColor: color2,
-                child: Icon(Icons.qr_code_2_sharp, color: Colors.white),
-              );
-            }
-            if (state is ScanqrLoaded == false) {
-              return FloatingActionButton(
-                onPressed: () {
-                  BlocProvider.of<ScanqrCubit>(context).scanqr();
-                },
-                backgroundColor: color2,
-                child: Icon(Icons.qr_code_2_sharp, color: Colors.white),
-              );
-            }
-            var task = (state as ScanqrLoaded).task;
-            var json = (state as ScanqrLoaded).json;
-            if (task.isNotEmpty) {
-              return SpeedDial(
-                icon: Icons.menu,
-                activeIcon: Icons.close,
-                backgroundColor: color2,
-                foregroundColor: Colors.white,
-                activeBackgroundColor: color1,
-                activeForegroundColor: Colors.white,
-                visible: true,
-                closeManually: false,
-                curve: Curves.bounceIn,
-                overlayColor: Colors.black,
-                overlayOpacity: 0.0,
-                shape: CircleBorder(),
-                children: [
-                  SpeedDialChild(
-                      child: Icon(FontAwesomeIcons.check),
-                      backgroundColor: Colors.blue,
-                      foregroundColor: Colors.white,
-                      label: 'Simpan Pemeriksaan',
-                      labelStyle: TextStyle(fontSize: 18.0),
-                      onTap: () {
-                        print(isiTask);
-                        save(json['reference'], json['initial']);
-                      }),
-                  SpeedDialChild(
-                    child: Icon(Icons.qr_code_2_sharp),
-                    backgroundColor: basic,
-                    foregroundColor: Colors.white,
-                    label: 'Pinda Kode QR',
-                    labelStyle: TextStyle(fontSize: 18.0),
-                    onTap: () {
-                      BlocProvider.of<ScanqrCubit>(context).scanqr();
-                    },
-                  ),
-                ],
-              );
-            }
+        child: BlocBuilder<ScanqrCubit, ScanqrState>(builder: (context, state) {
+          if (state is ScanqrLoading) {
             return FloatingActionButton(
               onPressed: () {
                 BlocProvider.of<ScanqrCubit>(context).scanqr();
               },
               backgroundColor: color2,
-              child: Icon(Icons.qr_code_2_sharp, color: Colors.white),
+              child: const Icon(Icons.qr_code_2_sharp, color: Colors.white),
             );
-          }),
-        ),
+          }
+          if (state is ScanqrLoaded == false) {
+            return FloatingActionButton(
+              onPressed: () {
+                BlocProvider.of<ScanqrCubit>(context).scanqr();
+              },
+              backgroundColor: color2,
+              child: const Icon(Icons.qr_code_2_sharp, color: Colors.white),
+            );
+          }
+          var task = (state as ScanqrLoaded).task;
+          var json = (state as ScanqrLoaded).json;
+          if (task.isNotEmpty) {
+            return SpeedDial(
+              icon: Icons.menu,
+              activeIcon: Icons.close,
+              backgroundColor: color2,
+              foregroundColor: Colors.white,
+              activeBackgroundColor: color1,
+              activeForegroundColor: Colors.white,
+              visible: true,
+              closeManually: false,
+              curve: Curves.bounceIn,
+              overlayColor: Colors.black,
+              overlayOpacity: 0.0,
+              shape: const CircleBorder(),
+              children: [
+                SpeedDialChild(
+                    child: const Icon(FontAwesomeIcons.check),
+                    backgroundColor: Colors.blue,
+                    foregroundColor: Colors.white,
+                    label: 'Simpan Pemeriksaan',
+                    labelStyle: const TextStyle(fontSize: 18.0),
+                    onTap: () {
+                      print(isiTask);
+                      save(json['reference'], json['initial'], task);
+                    }),
+                SpeedDialChild(
+                  child: const Icon(Icons.qr_code_2_sharp),
+                  backgroundColor: basic,
+                  foregroundColor: Colors.white,
+                  label: 'Pinda Kode QR',
+                  labelStyle: const TextStyle(fontSize: 18.0),
+                  onTap: () {
+                    BlocProvider.of<ScanqrCubit>(context).scanqr();
+                  },
+                ),
+              ],
+            );
+          }
+          return FloatingActionButton(
+            onPressed: () {
+              BlocProvider.of<ScanqrCubit>(context).scanqr();
+            },
+            backgroundColor: color2,
+            child: const Icon(Icons.qr_code_2_sharp, color: Colors.white),
+          );
+        }),
       ),
       body: BlocBuilder<ScanqrCubit, ScanqrState>(
         builder: (context, state) {
@@ -202,15 +199,35 @@ class _UserState extends State<User> {
           var json = (state as ScanqrLoaded).json;
           var task = (state as ScanqrLoaded).task;
           var statusCode = (state as ScanqrLoaded).statusCode;
-          // task.map((e) => {});
+          if (json.isEmpty && task.isEmpty) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: const [
+                  Text('Silahkan Pindai Kode QR pada Apar'),
+                  Text('Untuk Melakukan Pemeriksaan'),
+                ],
+              ),
+            );
+          } else if (json.isNotEmpty && task.isEmpty) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: const [
+                  Text('Tidak Ada Task Pada Apar Ini'),
+                  Text('Tidak Ada Untuk Melakukan Pemeriksaan'),
+                ],
+              ),
+            );
+          }
           for (var i = 0; i <= task.length; i++) {
             groupValue.add(-1);
           }
-          // var task = [];
           print(task);
           if (statusCode != 200) {
             return Container();
           }
+
           return ListView(
             children: [
               ListView.builder(
@@ -219,6 +236,7 @@ class _UserState extends State<User> {
                 itemCount: task.length,
                 itemBuilder: (BuildContext context, int index) {
                   var a = task[index];
+                  print(isiTask.indexWhere((element) => element.id_task == a['id_task']));
                   return Container(
                     margin: const EdgeInsets.all(8.0),
                     padding: const EdgeInsets.all(8.0),
@@ -226,7 +244,8 @@ class _UserState extends State<User> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Badge(
-                          label: Text('Nomer Task', style: const TextStyle(fontSize: 11.5)),
+                          backgroundColor: const Color(0xFF482121),
+                          label: const Text('Nomer Task', style: TextStyle(fontSize: 11.5)),
                           // backgroundColor: Colors.white,
                           child: Container(
                               margin: const EdgeInsets.only(top: 4.0, bottom: 8.0),
@@ -234,12 +253,13 @@ class _UserState extends State<User> {
                               height: 32,
                               alignment: Alignment.center,
                               decoration: BoxDecoration(
-                                color: Colors.blue,
+                                // color: Colors.blue,
+                                color: isiTask.indexWhere((element) => element.id_task == a['id_task']) != -1 ? Colors.green[600] : Color(0XFFA13333),
                                 borderRadius: BorderRadius.circular(80.0),
                               ),
                               child: Text(
                                 a['id_task'].toString(),
-                                style: TextStyle(fontSize: 18, color: Colors.white),
+                                style: const TextStyle(fontSize: 18, color: Colors.white),
                               )),
                         ),
                         Text(a['task'], textAlign: TextAlign.center, style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w600)),
@@ -266,6 +286,11 @@ class _UserState extends State<User> {
                             });
                             if (groupValue[index] == 1) {
                               baik(a['id_task']);
+                            } else if (groupValue[index] == 0) {
+                              var res = isiTask.indexWhere((element) => element.id_task == a['id_task'] && element.status == "V");
+                              if (res != -1) {
+                                isiTask.removeWhere((element) => element.id_task == a['id_task']);
+                              }
                             }
                           },
                         ),

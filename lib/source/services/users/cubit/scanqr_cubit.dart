@@ -21,6 +21,8 @@ class ScanqrCubit extends Cubit<ScanqrState> {
       // if (barcodeScanRes == '-1') {
       //   EasyLoading.showInfo('Di batalkan', duration: const Duration(seconds: 2));
       // } else {
+      // var ref = barcodeScanRes.split('/')[barcodeScanRes.split('/').length - 2];
+      // var inisial = barcodeScanRes.split('/')[barcodeScanRes.split('/').length - 1];
       emit(ScanqrLoading());
       myRepository!.scanqr('ref', 'inisial').then((value) {
         var json = jsonDecode(value.body);
@@ -43,5 +45,9 @@ class ScanqrCubit extends Cubit<ScanqrState> {
     } on PlatformException {
       EasyLoading.showError('Failed to get Platform version .');
     }
+  }
+
+  void inisialisasi() {
+    emit(ScanqrLoaded(json: {}, task: {}));
   }
 }
