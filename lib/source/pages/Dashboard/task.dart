@@ -91,6 +91,39 @@ class _UserState extends State<User> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Task'),
+        actions: [
+          BlocBuilder<ScanqrCubit, ScanqrState>(
+            builder: (context, state) {
+              if (state is ScanqrLoading) {
+                return Container();
+              }
+              if (state is ScanqrLoaded == false) {
+                return Container();
+              }
+              var task = (state as ScanqrLoaded).task;
+              var json = (state as ScanqrLoaded).json;
+              if (task.isNotEmpty) {
+                return IconButton(
+                    onPressed: () {
+                      setState(() {
+                        isiTask;
+                        const snackdemo = SnackBar(
+                          content: Text('Di Refresh'),
+                          elevation: 10,
+                          duration: const Duration(seconds: 2),
+                          behavior: SnackBarBehavior.floating,
+                          dismissDirection: DismissDirection.startToEnd,
+                          margin: EdgeInsets.all(5),
+                        );
+                        ScaffoldMessenger.of(context).showSnackBar(snackdemo);
+                      });
+                    },
+                    icon: Icon(Icons.refresh));
+              }
+              return Container();
+            },
+          )
+        ],
       ),
       floatingActionButton: BlocListener<InsertaskCubit, InsertaskState>(
         listener: (context, state) {
@@ -240,6 +273,14 @@ class _UserState extends State<User> {
                   return Container(
                     margin: const EdgeInsets.all(8.0),
                     padding: const EdgeInsets.all(8.0),
+                    decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(8.0), boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.5),
+                        blurRadius: 2.3,
+                        spreadRadius: 2.3,
+                        offset: Offset(1, 3),
+                      ),
+                    ]),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -264,36 +305,83 @@ class _UserState extends State<User> {
                         ),
                         Text(a['task'], textAlign: TextAlign.center, style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w600)),
                         const SizedBox(height: 8.0),
-                        ToggleSwitch(
-                          minWidth: MediaQuery.of(context).size.width / 2,
-                          initialLabelIndex: groupValue[index],
-                          cornerRadius: 20.0,
-                          activeFgColor: Colors.white,
-                          inactiveBgColor: Colors.grey,
-                          inactiveFgColor: Colors.white,
-                          totalSwitches: 2,
-                          labels: ['Tidak Baik', 'Baik'],
-                          icons: [FontAwesomeIcons.thumbsDown, FontAwesomeIcons.thumbsUp],
-                          activeBgColors: [
-                            [colorBtnCancel],
-                            [Colors.blue],
-                          ],
-                          onToggle: (id) {
-                            print(a['task']);
-                            print('switched to: $id');
-                            setState(() {
-                              groupValue[index] = id!;
-                            });
-                            if (groupValue[index] == 1) {
-                              baik(a['id_task']);
-                            } else if (groupValue[index] == 0) {
-                              var res = isiTask.indexWhere((element) => element.id_task == a['id_task'] && element.status == "V");
-                              if (res != -1) {
-                                isiTask.removeWhere((element) => element.id_task == a['id_task']);
-                              }
-                            }
-                          },
-                        ),
+                        LayoutBuilder(builder: (BuildContext context, BoxConstraints constraints) {
+                          if (constraints.maxWidth <= 400) {
+                            return Center(
+                              child: ToggleSwitch(
+                                customWidths: const [150, 150],
+                                initialLabelIndex: groupValue[index],
+                                cornerRadius: 20.0,
+                                activeFgColor: Colors.white,
+                                inactiveBgColor: Colors.grey,
+                                inactiveFgColor: Colors.white,
+                                totalSwitches: 2,
+                                customTextStyles: const [
+                                  TextStyle(fontSize: 17),
+                                  TextStyle(fontSize: 17),
+                                ],
+                                labels: const ['Tidak Baik', 'Baik'],
+                                icons: const [FontAwesomeIcons.thumbsDown, FontAwesomeIcons.thumbsUp],
+                                activeBgColors: const [
+                                  [colorBtnCancel],
+                                  [Colors.blue],
+                                ],
+                                onToggle: (id) {
+                                  print(a['task']);
+                                  print('switched to: $id');
+                                  setState(() {
+                                    groupValue[index] = id!;
+                                  });
+                                  if (groupValue[index] == 1) {
+                                    baik(a['id_task']);
+                                  } else if (groupValue[index] == 0) {
+                                    var res = isiTask.indexWhere((element) => element.id_task == a['id_task'] && element.status == "V");
+                                    if (res != -1) {
+                                      isiTask.removeWhere((element) => element.id_task == a['id_task']);
+                                    }
+                                  }
+                                },
+                              ),
+                            );
+                          } else {
+                            return Center(
+                              child: ToggleSwitch(
+                                customWidths: const [250, 250],
+                                initialLabelIndex: groupValue[index],
+                                cornerRadius: 20.0,
+                                activeFgColor: Colors.white,
+                                inactiveBgColor: Colors.grey,
+                                inactiveFgColor: Colors.white,
+                                totalSwitches: 2,
+                                customTextStyles: const [
+                                  TextStyle(fontSize: 17),
+                                  TextStyle(fontSize: 17),
+                                ],
+                                labels: const ['Tidak Baik', 'Baik'],
+                                icons: const [FontAwesomeIcons.thumbsDown, FontAwesomeIcons.thumbsUp],
+                                activeBgColors: const [
+                                  [colorBtnCancel],
+                                  [Colors.blue],
+                                ],
+                                onToggle: (id) {
+                                  print(a['task']);
+                                  print('switched to: $id');
+                                  setState(() {
+                                    groupValue[index] = id!;
+                                  });
+                                  if (groupValue[index] == 1) {
+                                    baik(a['id_task']);
+                                  } else if (groupValue[index] == 0) {
+                                    var res = isiTask.indexWhere((element) => element.id_task == a['id_task'] && element.status == "V");
+                                    if (res != -1) {
+                                      isiTask.removeWhere((element) => element.id_task == a['id_task']);
+                                    }
+                                  }
+                                },
+                              ),
+                            );
+                          }
+                        }),
                         if (groupValue[index] == 0)
                           Padding(
                             padding: const EdgeInsets.all(8.0),
@@ -301,12 +389,18 @@ class _UserState extends State<User> {
                               color: basic2,
                               splashColor: color2,
                               text: 'Tambahkan Keterangan',
-                              textStyle: const TextStyle(fontWeight: FontWeight.w600),
+                              textStyle: const TextStyle(fontWeight: FontWeight.w600, color: Colors.white),
                               onTap: () {
                                 // fillask(a['id_task']);
                                 Navigator.push(context, MaterialPageRoute(
                                   builder: (context) {
-                                    return Insert(isitask: isiTask, id_task: a['id_task']);
+                                    return Insert(
+                                      isitask: isiTask,
+                                      id_task: a['id_task'],
+                                      voidCallback: () => setState(() {
+                                        isiTask;
+                                      }),
+                                    );
                                   },
                                 ));
                               },

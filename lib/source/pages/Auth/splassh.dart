@@ -16,6 +16,7 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
     BlocProvider.of<AuthCubit>(context).splashScreen(context);
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,10 +24,9 @@ class _SplashScreenState extends State<SplashScreen> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Image.asset('assets/apar.jpg', height: 150),
-          const SizedBox(height: 12.0),
-          CupertinoActivityIndicator(),
+        children: const [
+          SizedBox(height: 12.0),
+          CircularProgressIndicator(),
         ],
       ),
     ));

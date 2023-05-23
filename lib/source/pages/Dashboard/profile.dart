@@ -20,7 +20,9 @@ class Profile extends StatefulWidget {
 
 class _ProfileState extends State<Profile> {
   void logout(username) {
-    BlocProvider.of<AuthCubit>(context).logout(context, username);
+    MyDialog.dialogInfo(context, "Apakah Anda Yakin ingin keluar ?", () {}, () {
+      BlocProvider.of<AuthCubit>(context).logout(context, username);
+    });
   }
 
   @override

@@ -16,7 +16,8 @@ class MyApi {
   }
 
   static scanqr(ref, inisial) {
-    return "$baseUrl/api/v2/apar/scan-qrcode-history-task?references=2ed6d27f-3ae0-4855-96d5-8035f631b9ba&initial=A";
+    // return "$baseUrl/api/v2/apar/scan-qrcode-history-task?references=2ed6d27f-3ae0-4855-96d5-8035f631b9ba&initial=A";
+    return "$baseUrl/api/v2/apar/scan-qrcode-history-task?references=$ref&initial=$inisial";
   }
 
   static insertTask() {

@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_maps_apar/source/pages/Dashboard/task.dart';
 import 'package:flutter_maps_apar/source/widget/color.dart';
 import 'package:flutter_maps_apar/source/widget/customButton.dart';
@@ -13,7 +14,8 @@ import 'package:intl/intl.dart';
 class Insert extends StatefulWidget {
   final List? isitask;
   final int? id_task;
-  Insert({super.key, this.isitask, this.id_task});
+  final VoidCallback? voidCallback;
+  Insert({super.key, this.isitask, this.id_task, this.voidCallback});
 
   @override
   State<Insert> createState() => _InsertState();
@@ -28,7 +30,7 @@ class _InsertState extends State<Insert> {
   Future pilihGambar() async {
     gambar = await ImagePicker().pickImage(
       source: ImageSource.camera,
-      maxHeight: 400,
+      maxHeight: 450,
       maxWidth: 300,
       imageQuality: 100,
     );
@@ -67,8 +69,9 @@ class _InsertState extends State<Insert> {
                     setState(() {});
                   },
                   child: Container(
-                    height: 250,
+                    height: 300,
                     width: MediaQuery.of(context).size.width,
+                    margin: const EdgeInsets.all(8.0),
                     decoration: BoxDecoration(
                       color: Colors.white,
                       border: Border.all(color: Colors.black, width: 2),
@@ -78,12 +81,12 @@ class _InsertState extends State<Insert> {
                         ? Icon(FontAwesomeIcons.images, size: 40)
                         : Image.file(
                             File(gambar!.path),
-                            fit: BoxFit.cover,
+                            fit: BoxFit.fitHeight,
                             errorBuilder: (context, error, stackTrace) {
                               return Container(
                                 color: Colors.grey,
                                 width: 100,
-                                height: 100,
+                                height: 130,
                                 child: const Center(
                                   child: const Text('Error load image', textAlign: TextAlign.center),
                                 ),
@@ -114,12 +117,13 @@ class _InsertState extends State<Insert> {
                     color: basic,
                     splashColor: color2,
                     onTap: () {
-                      // Navigator.pop(context);
+                      Navigator.pop(context);
                       // print(input);
                       var a = widget.isitask!.indexWhere((element) => element.id_task == widget.id_task);
                       print(a);
                       if (a != -1) {
                         setState(() {
+                          EasyLoading.showInfo("Berhasil di ubah", duration: const Duration(seconds: 1));
                           widget.isitask![a].photo = '${base64String}';
                           widget.isitask![a].status = 'X';
                           widget.isitask![a].note = controllerNote.text;
@@ -128,6 +132,7 @@ class _InsertState extends State<Insert> {
                       } else if (a == -1) {
                         setState(
                           () {
+                            EasyLoading.showInfo("Berhasil di periksa", duration: const Duration(seconds: 1));
                             IsiTask task = IsiTask(widget.id_task, '', '', '', date.toString());
                             task.id_task = widget.id_task;
                             task.photo = '${base64String}';
@@ -138,6 +143,7 @@ class _InsertState extends State<Insert> {
                         );
                       }
                       setState(() {
+                      widget.voidCallback;
                         widget.isitask;
                       });
                     },
