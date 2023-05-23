@@ -126,7 +126,7 @@ class _UserState extends State<User> {
         ],
       ),
       floatingActionButton: BlocListener<InsertaskCubit, InsertaskState>(
-        listener: (context, state) {
+        listener: (context, state) async {
           if (state is InsertaskLoading) {
             EasyLoading.show();
           }
@@ -139,6 +139,8 @@ class _UserState extends State<User> {
                 MyDialog.dialogAlert(context, json['errors'].toString());
               } else {
                 MyDialog.dialogSuccess(context, json['message']);
+                await Future.delayed(const Duration(seconds: 1));
+                BlocProvider.of<ScanqrCubit>(context).inisialisasi();
               }
             } else {
               MyDialog.dialogAlert(context, json['message']);
@@ -195,7 +197,7 @@ class _UserState extends State<User> {
                   child: const Icon(Icons.qr_code_2_sharp),
                   backgroundColor: basic,
                   foregroundColor: Colors.white,
-                  label: 'Pinda Kode QR',
+                  label: 'Pindai Kode QR',
                   labelStyle: const TextStyle(fontSize: 18.0),
                   onTap: () {
                     BlocProvider.of<ScanqrCubit>(context).scanqr();

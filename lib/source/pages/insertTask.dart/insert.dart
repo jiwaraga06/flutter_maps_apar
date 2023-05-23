@@ -43,6 +43,40 @@ class _InsertState extends State<Insert> {
     setState(() {});
   }
 
+  void save() {
+    Navigator.pop(context);
+    setState(() {
+      date = DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now());
+    });
+    var a = widget.isitask!.indexWhere((element) => element.id_task == widget.id_task);
+    print(a);
+    if (a != -1) {
+      setState(() {
+        EasyLoading.showInfo("Berhasil di ubah", duration: const Duration(seconds: 1));
+        widget.isitask![a].photo = '$base64String';
+        widget.isitask![a].status = 'X';
+        widget.isitask![a].note = controllerNote.text;
+        widget.isitask![a].timestamp = date.toString();
+      });
+    } else if (a == -1) {
+      setState(
+        () {
+          EasyLoading.showInfo("Berhasil di periksa", duration: const Duration(seconds: 1));
+          IsiTask task = IsiTask(widget.id_task, '', '', '', date.toString());
+          task.id_task = widget.id_task;
+          task.photo = '$base64String';
+          task.status = 'X';
+          task.note = controllerNote.text;
+          widget.isitask!.add(task);
+        },
+      );
+    }
+    setState(() {
+      widget.voidCallback;
+      widget.isitask;
+    });
+  }
+
   var date;
   @override
   void initState() {
@@ -116,37 +150,7 @@ class _InsertState extends State<Insert> {
                     textStyle: TextStyle(fontSize: 17, color: Colors.white),
                     color: basic,
                     splashColor: color2,
-                    onTap: () {
-                      Navigator.pop(context);
-                      // print(input);
-                      var a = widget.isitask!.indexWhere((element) => element.id_task == widget.id_task);
-                      print(a);
-                      if (a != -1) {
-                        setState(() {
-                          EasyLoading.showInfo("Berhasil di ubah", duration: const Duration(seconds: 1));
-                          widget.isitask![a].photo = '${base64String}';
-                          widget.isitask![a].status = 'X';
-                          widget.isitask![a].note = controllerNote.text;
-                          widget.isitask![a].timestamp = date.toString();
-                        });
-                      } else if (a == -1) {
-                        setState(
-                          () {
-                            EasyLoading.showInfo("Berhasil di periksa", duration: const Duration(seconds: 1));
-                            IsiTask task = IsiTask(widget.id_task, '', '', '', date.toString());
-                            task.id_task = widget.id_task;
-                            task.photo = '${base64String}';
-                            task.status = 'X';
-                            task.note = controllerNote.text;
-                            widget.isitask!.add(task);
-                          },
-                        );
-                      }
-                      setState(() {
-                      widget.voidCallback;
-                        widget.isitask;
-                      });
-                    },
+                    onTap: save,
                   ),
                 )
               ],
