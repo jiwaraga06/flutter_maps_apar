@@ -59,17 +59,15 @@ class _InsertState extends State<Insert> {
         widget.isitask![a].timestamp = date.toString();
       });
     } else if (a == -1) {
-      setState(
-        () {
-          EasyLoading.showInfo("Berhasil di periksa", duration: const Duration(seconds: 1));
-          IsiTask task = IsiTask(widget.id_task, '', '', '', date.toString());
-          task.id_task = widget.id_task;
-          task.photo = '$base64String';
-          task.status = 'X';
-          task.note = controllerNote.text;
-          widget.isitask!.add(task);
-        },
-      );
+      setState(() {
+        EasyLoading.showInfo("Berhasil di periksa", duration: const Duration(seconds: 1));
+        IsiTask task = IsiTask(widget.id_task, '', '', '', date.toString());
+        task.id_task = widget.id_task;
+        task.photo = '$base64String';
+        task.status = 'X';
+        task.note = controllerNote.text;
+        widget.isitask!.add(task);
+      });
     }
     setState(() {
       widget.voidCallback;
