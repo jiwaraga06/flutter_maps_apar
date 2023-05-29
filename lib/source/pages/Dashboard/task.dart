@@ -110,7 +110,7 @@ class _UserState extends State<User> {
                         const snackdemo = SnackBar(
                           content: Text('Di Refresh'),
                           elevation: 10,
-                          duration: const Duration(seconds: 2),
+                          duration: Duration(seconds: 2),
                           behavior: SnackBarBehavior.floating,
                           dismissDirection: DismissDirection.startToEnd,
                           margin: EdgeInsets.all(5),

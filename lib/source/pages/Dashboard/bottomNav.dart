@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_maps_apar/source/pages/Dashboard/history.dart';
-import 'package:flutter_maps_apar/source/pages/Dashboard/pemeriksaan.dart';
+import 'package:flutter_maps_apar/source/pages/Dashboard/Master/master.dart';
 import 'package:flutter_maps_apar/source/pages/Dashboard/profile.dart';
 import 'package:flutter_maps_apar/source/pages/Dashboard/task.dart';
 import 'package:flutter_maps_apar/source/services/Auth/cubit/tabbar_cubit.dart';
@@ -41,7 +41,6 @@ class _CustomBottomNavState extends State<CustomBottomNav> {
           body: [
             if (user_roles.where((e) => e == 'admin').toList().isNotEmpty) Home(),
             if (user_roles.where((e) => e == 'user').toList().isNotEmpty) User(),
-            History(),
             Profile(),
           ].elementAt(index),
           bottomNavigationBar: Padding(
@@ -64,12 +63,12 @@ class _CustomBottomNavState extends State<CustomBottomNav> {
                 items: [
                   if (user_roles.where((e) => e == 'admin').toList().isNotEmpty)
                     const BottomNavigationBarItem(
-                      icon: Icon(FontAwesomeIcons.add),
+                      icon: Icon(FontAwesomeIcons.bars),
                       activeIcon: Icon(
-                        FontAwesomeIcons.add,
+                        FontAwesomeIcons.bars,
                         color: Colors.white,
                       ),
-                      label: 'Pemeriksaan',
+                      label: 'Master',
                     ),
                   if (user_roles.where((e) => e == 'user').toList().isNotEmpty)
                     const BottomNavigationBarItem(
@@ -80,14 +79,7 @@ class _CustomBottomNavState extends State<CustomBottomNav> {
                       ),
                       label: 'Task',
                     ),
-                  const BottomNavigationBarItem(
-                    icon: Icon(FontAwesomeIcons.history),
-                    activeIcon: Icon(
-                      FontAwesomeIcons.history,
-                      color: Colors.white,
-                    ),
-                    label: 'Riwayat',
-                  ),
+               
                   const BottomNavigationBarItem(
                     icon: Icon(FontAwesomeIcons.users),
                     activeIcon: Icon(

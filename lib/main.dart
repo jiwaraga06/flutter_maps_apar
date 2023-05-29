@@ -9,6 +9,10 @@ import 'package:flutter_maps_apar/source/router/string.dart';
 import 'package:flutter_maps_apar/source/services/Auth/cubit/auth_cubit.dart';
 import 'package:flutter_maps_apar/source/services/Auth/cubit/change_pass_cubit.dart';
 import 'package:flutter_maps_apar/source/services/Auth/cubit/profile_cubit.dart';
+import 'package:flutter_maps_apar/source/services/Master/Apar/cubit/apar_cubit.dart';
+import 'package:flutter_maps_apar/source/services/Master/Apar/cubit/editapar_cubit.dart';
+import 'package:flutter_maps_apar/source/services/Master/Hydran/cubit/edithydran_cubit.dart';
+import 'package:flutter_maps_apar/source/services/Master/Hydran/cubit/hydran_cubit.dart';
 import 'package:flutter_maps_apar/source/services/users/cubit/insertask_cubit.dart';
 import 'package:flutter_maps_apar/source/services/users/cubit/scanqr_cubit.dart';
 import 'package:flutter_maps_apar/source/widget/color.dart';
@@ -68,6 +72,19 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) => ScanqrCubit(myRepository: myRepository),
+        ),
+        // MODUL MASTER
+        BlocProvider(
+          create: (context) => AparCubit(myRepository: myRepository),
+        ),
+        BlocProvider(
+          create: (context) => EditaparCubit(myRepository: myRepository),
+        ),
+        BlocProvider(
+          create: (context) => HydranCubit(myRepository: myRepository),
+        ),
+        BlocProvider(
+          create: (context) => EdithydranCubit(myRepository: myRepository),
         ),
       ],
       child: GetMaterialApp(

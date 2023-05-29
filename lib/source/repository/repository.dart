@@ -29,4 +29,24 @@ class MyRepository {
     var json = await myNetwork!.insertTask(body);
     return json;
   }
+
+  Future getmasterapar() async {
+    var json = await myNetwork!.getmasterapar();
+    return json;
+  }
+
+  Future putmasterapar(id, body) async {
+    var json = await myNetwork!.putmasterapar(id, body);
+    return json;
+  }
+
+  Future getmasterhydran() async {
+    var json = await myNetwork!.getmasterhydran();
+    return json;
+  }
+
+  Future putmasterhydran(id, body) async {
+    var json = await myNetwork!.putmasterhydran(id, body);
+    return json;
+  }
 }

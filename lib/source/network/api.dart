@@ -23,4 +23,20 @@ class MyApi {
   static insertTask() {
     return "$baseUrl/api/v2/apar/insert-history-task";
   }
+
+  static getmasterapar() {
+    return "$baseUrl/api/v2/apar/master-apar";
+  }
+
+  static getmasterhydran() {
+    return "$baseUrl/api/v2/apar/master-hydran";
+  }
+
+  static putmasterapar(id) {
+    return "$baseUrl/api/v2/apar/master-apar/$id";
+  }
+
+  static putmasterhydran(id) {
+    return "$baseUrl/api/v2/apar/master-hydran/$id";
+  }
 }

@@ -54,6 +54,10 @@ dependencies:
   responsive_framework: ^1.0.0
   toggle_switch: ^2.1.0
   flutter_speed_dial: ^6.2.0
+  expansion_tile_card: ^3.0.0
+  flutter_switch: ^0.3.2
+  # Paging View
+  infinite_scroll_pagination: ^3.2.0
 
 dev_dependencies:
   flutter_test:
