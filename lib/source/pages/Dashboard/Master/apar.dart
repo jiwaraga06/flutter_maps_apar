@@ -38,12 +38,25 @@ class _AparState extends State<Apar> {
           var json = (state as AparLoaded).json;
           var statusCode = (state as AparLoaded).statusCode;
           if (json.isEmpty) {
-            return Container();
+            return InkWell(
+              onTap: () {
+                BlocProvider.of<AparCubit>(context).getmasterapar();
+              },
+              child: Container(
+                alignment: Alignment.center,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: const [
+                    Text("Data kosong"),
+                    Text("Ketuk Layar untuk Refresh"),
+                  ],
+                ),
+              ),
+            );
           }
           if (statusCode != 200) {
             return Container();
           }
-
           return RefreshIndicator(
             onRefresh: () async {
               BlocProvider.of<AparCubit>(context).getmasterapar();

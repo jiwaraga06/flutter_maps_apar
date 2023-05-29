@@ -34,6 +34,27 @@ class _HydranState extends State<Hydran> {
             return Container();
           }
           var json = (state as HydranLoaded).json;
+          var statusCode = (state as HydranLoaded).statusCode;
+          if (json.isEmpty) {
+            return InkWell(
+              onTap: () {
+                BlocProvider.of<HydranCubit>(context).getmasterhydran();
+              },
+              child: Container(
+                alignment: Alignment.center,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: const [
+                    Text("Data kosong"),
+                    Text("Ketuk Layar untuk Refresh"),
+                  ],
+                ),
+              ),
+            );
+          }
+          if (statusCode != 200) {
+            return Container();
+          }
           return RefreshIndicator(
             onRefresh: () async {
               BlocProvider.of<HydranCubit>(context).getmasterhydran();
