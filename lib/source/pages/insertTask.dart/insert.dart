@@ -13,9 +13,9 @@ import 'package:intl/intl.dart';
 
 class Insert extends StatefulWidget {
   final List? isitask;
-  final int? id_task;
+  final int? id_task, status;
   final VoidCallback? voidCallback;
-  Insert({super.key, this.isitask, this.id_task, this.voidCallback});
+  Insert({super.key, this.isitask, this.id_task, this.voidCallback, this.status});
 
   @override
   State<Insert> createState() => _InsertState();
@@ -43,7 +43,7 @@ class _InsertState extends State<Insert> {
     setState(() {});
   }
 
-  void save() {
+  void savejelek() {
     Navigator.pop(context);
     setState(() {
       date = DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now());
@@ -75,12 +75,46 @@ class _InsertState extends State<Insert> {
     });
   }
 
+  void savebaik() async {
+    Navigator.pop(context);
+    setState(() {
+      date = DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now());
+    });
+    var a = widget.isitask!.indexWhere((element) => element.id_task == widget.id_task);
+    print(a);
+    if (a != -1) {
+      setState(() {
+        EasyLoading.showInfo("Berhasil di ubah", duration: const Duration(seconds: 1));
+        widget.isitask![a].photo = '$base64String';
+        widget.isitask![a].status = 'V';
+        widget.isitask![a].note = controllerNote.text;
+        widget.isitask![a].timestamp = date.toString();
+      });
+    } else if (a == -1) {
+      setState(() {
+        EasyLoading.showInfo("Berhasil di periksa", duration: const Duration(seconds: 1));
+        IsiTask task = IsiTask(widget.id_task, '', '', '', date.toString());
+        task.id_task = widget.id_task;
+        task.photo = '$base64String';
+        task.status = 'V';
+        task.note = controllerNote.text;
+        widget.isitask!.add(task);
+      });
+    }
+  }
+
   var date;
   @override
   void initState() {
     super.initState();
     date = DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now());
     print(date);
+    print("status ${widget.status}");
+    if (widget.status == 1) {
+      print('baik');
+    } else {
+      print('jelek');
+    }
   }
 
   @override
@@ -148,7 +182,9 @@ class _InsertState extends State<Insert> {
                     textStyle: TextStyle(fontSize: 17, color: Colors.white),
                     color: basic,
                     splashColor: color2,
-                    onTap: save,
+                    onTap: () {
+                      widget.status == 1 ? savebaik() : savejelek();
+                    },
                   ),
                 )
               ],

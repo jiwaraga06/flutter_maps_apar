@@ -84,6 +84,8 @@ class _UserState extends State<User> {
     super.initState();
     date = DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now());
     BlocProvider.of<ScanqrCubit>(context).inisialisasi();
+    isiTask.clear();
+    groupValue.clear();
   }
 
   @override
@@ -141,6 +143,8 @@ class _UserState extends State<User> {
                 MyDialog.dialogSuccess(context, json['message']);
                 await Future.delayed(const Duration(seconds: 1));
                 BlocProvider.of<ScanqrCubit>(context).inisialisasi();
+                isiTask.clear();
+                groupValue.clear();
               }
             } else {
               MyDialog.dialogAlert(context, json['message']);
@@ -254,7 +258,7 @@ class _UserState extends State<User> {
                 ],
               ),
             );
-          } 
+          }
           for (var i = 0; i <= task.length; i++) {
             groupValue.add(-1);
           }
@@ -262,7 +266,6 @@ class _UserState extends State<User> {
           if (statusCode != 200) {
             return Container();
           }
-
           return ListView(
             children: [
               ListView.builder(
@@ -334,14 +337,7 @@ class _UserState extends State<User> {
                                   setState(() {
                                     groupValue[index] = id!;
                                   });
-                                  if (groupValue[index] == 1) {
-                                    baik(a['id_task']);
-                                  } else if (groupValue[index] == 0) {
-                                    var res = isiTask.indexWhere((element) => element.id_task == a['id_task'] && element.status == "V");
-                                    if (res != -1) {
-                                      isiTask.removeWhere((element) => element.id_task == a['id_task']);
-                                    }
-                                  }
+                                 
                                 },
                               ),
                             );
@@ -384,30 +380,34 @@ class _UserState extends State<User> {
                             );
                           }
                         }),
-                        if (groupValue[index] == 0)
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: CustomButton(
-                              color: basic2,
-                              splashColor: color2,
-                              text: 'Tambahkan Keterangan',
-                              textStyle: const TextStyle(fontWeight: FontWeight.w600, color: Colors.white),
-                              onTap: () {
-                                // fillask(a['id_task']);
-                                Navigator.push(context, MaterialPageRoute(
-                                  builder: (context) {
-                                    return Insert(
-                                      isitask: isiTask,
-                                      id_task: a['id_task'],
-                                      voidCallback: () => setState(() {
-                                        isiTask;
-                                      }),
-                                    );
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: CustomButton(
+                            color: basic2,
+                            splashColor: color2,
+                            text: 'Tambahkan Keterangan',
+                            textStyle: const TextStyle(fontWeight: FontWeight.w600, color: Colors.white),
+                            onTap: groupValue[index] == -1
+                                ? () {
+                                    EasyLoading.showInfo('Status belum di pilih');
+                                  }
+                                : () {
+                                    // fillask(a['id_task']);
+                                    Navigator.push(context, MaterialPageRoute(
+                                      builder: (context) {
+                                        return Insert(
+                                          status: groupValue[index],
+                                          isitask: isiTask,
+                                          id_task: a['id_task'],
+                                          voidCallback: () => setState(() {
+                                            isiTask;
+                                          }),
+                                        );
+                                      },
+                                    ));
                                   },
-                                ));
-                              },
-                            ),
                           ),
+                        ),
                         const SizedBox(height: 8),
                         const Divider(color: basic, thickness: 2),
                         const SizedBox(height: 8)
