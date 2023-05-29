@@ -254,7 +254,7 @@ class _UserState extends State<User> {
                 ],
               ),
             );
-          }
+          } 
           for (var i = 0; i <= task.length; i++) {
             groupValue.add(-1);
           }
