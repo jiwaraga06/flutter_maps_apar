@@ -71,7 +71,7 @@ class _HydranState extends State<Hydran> {
                     expandedColor: Colors.white,
                     title: Text(data['nama'], style: const TextStyle(fontSize: 16)),
                     subtitle: data['isService'] == null
-                        ? const Text("")
+                        ? const Text("Tersedia")
                         : data['isService'] == 0
                             ? const Text("Tersedia")
                             : const Text("Sedang di Service"),
@@ -88,9 +88,11 @@ class _HydranState extends State<Hydran> {
                               children: [
                                 const Text('Status', style: TextStyle(fontSize: 16)),
                                 const Text(':', style: TextStyle(fontSize: 16)),
-                                if (data['aktif'] == 1)  Text("Aktif", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold,color: Colors.green[600])),
-                                if (data['aktif'] == 0)  Text("Tidak Aktif", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold,color: Colors.red[600])),
-                                if (data['aktif'] == null) Text("Tidak Aktif", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold,color: Colors.red[600])),
+                                if (data['aktif'] == 1) Text("Aktif", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.green[600])),
+                                if (data['aktif'] == 0)
+                                  Text("Tidak Aktif", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.red[600])),
+                                if (data['aktif'] == null)
+                                  Text("Tidak Aktif", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.red[600])),
                               ],
                             ),
                           ],
