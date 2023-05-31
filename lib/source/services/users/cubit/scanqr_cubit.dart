@@ -34,7 +34,7 @@ class ScanqrCubit extends Cubit<ScanqrState> {
           var task = [];
           if (statusCode == 200) {
             if (json['errors'] != null) {
-              EasyLoading.showError('Unit sedang di Service');
+              EasyLoading.showError('Unit Sedang di Service');
               emit(ScanqrLoaded(statusCode: statusCode, json: json, task: []));
             } else {
               json.forEach((key, b) {

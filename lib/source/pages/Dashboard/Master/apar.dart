@@ -73,10 +73,10 @@ class _AparState extends State<Apar> {
                     expandedColor: Colors.white,
                     title: Text(data['nama'], style: const TextStyle(fontSize: 16)),
                     subtitle: data['isService'] == null
-                        ? Container()
+                        ? const Text("Tersedia")
                         : data['isService'] == 0
-                            ? const Text("Belum di Service")
-                            : const Text("Sudah di Service"),
+                            ? const Text("Tersedia")
+                            : const Text("Sedang di Service"),
                     children: [
                       Padding(
                         padding: const EdgeInsets.all(8.0),
@@ -97,8 +97,10 @@ class _AparState extends State<Apar> {
                               children: [
                                 const Text('Status', style: TextStyle(fontSize: 16)),
                                 const Text(':', style: TextStyle(fontSize: 16)),
-                                if (data['aktif'] == 1) const Text("Aktif", style: TextStyle(fontSize: 16)),
-                                if (data['aktif'] == 0) const Text("Tidak Aktif", style: TextStyle(fontSize: 16)),
+                                if (data['aktif'] == 1) Text("Aktif", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.green[600])),
+                                if (data['aktif'] == 0)
+                                  Text("Tidak Aktif", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.red[600])),
+                                if (data['aktif'] == null) Text("Tidak Aktif", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold,color: Colors.red[600])),
                               ],
                             ),
                             TableRow(
