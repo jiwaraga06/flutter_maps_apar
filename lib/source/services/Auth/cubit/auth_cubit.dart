@@ -32,16 +32,16 @@ class AuthCubit extends Cubit<AuthState> {
     var device_uuid;
     DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
     
-    // if (Platform.isIOS) {
-    //   var iosDeviceInfo = await deviceInfo.iosInfo;
-    //   print("IOS: ${iosDeviceInfo.identifierForVendor}");
-    //   device_uuid = iosDeviceInfo.identifierForVendor;
-    // } else {
-    //   var androidDeviceInfo = await deviceInfo.androidInfo;
-    //   print("Android: ${androidDeviceInfo.id}");
-    //   device_uuid = androidDeviceInfo.id;
-    // }
-    myRepository!.login(username, password, "TP1A.220624.014").then((value) async {
+    if (Platform.isIOS) {
+      var iosDeviceInfo = await deviceInfo.iosInfo;
+      print("IOS: ${iosDeviceInfo.identifierForVendor}");
+      device_uuid = iosDeviceInfo.identifierForVendor;
+    } else {
+      var androidDeviceInfo = await deviceInfo.androidInfo;
+      print("Android: ${androidDeviceInfo.id}");
+      device_uuid = androidDeviceInfo.id;
+    }
+    myRepository!.login(username, password, device_uuid).then((value) async {
       var json = jsonDecode(value.body);
       var statusCode = value.statusCode;
       print(json);
