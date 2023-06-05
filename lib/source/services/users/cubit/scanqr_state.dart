@@ -7,6 +7,12 @@ class ScanqrInitial extends ScanqrState {}
 
 class ScanqrLoading extends ScanqrState {}
 
+class ScanqrAkurasi extends ScanqrState {
+  final double? accuracy;
+
+  ScanqrAkurasi({this.accuracy});
+}
+
 class ScanqrLoaded extends ScanqrState {
   final int? statusCode;
   dynamic json;

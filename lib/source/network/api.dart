@@ -27,6 +27,9 @@ class MyApi {
   static getmasterapar() {
     return "$baseUrl/api/v2/apar/master-apar";
   }
+  static getmasteraparedit(id) {
+    return "$baseUrl/api/v2/apar/master-apar/$id/edit";
+  }
 
   static getmasterhydran() {
     return "$baseUrl/api/v2/apar/master-hydran";

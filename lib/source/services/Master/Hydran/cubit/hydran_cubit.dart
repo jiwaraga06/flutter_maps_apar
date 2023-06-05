@@ -1,6 +1,9 @@
 import 'dart:convert';
 
 import 'package:bloc/bloc.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_maps_apar/source/repository/repository.dart';
 import 'package:meta/meta.dart';
 
@@ -30,5 +33,25 @@ class HydranCubit extends Cubit<HydranState> {
       print('Put Hydran: $json');
       emit(HydranLoaded(statusCode: statusCode, json: json));
     });
+  }
+
+  void initial() {
+    emit(HydranId(idHydran: null));
+  }
+
+  void scanhydran() async {
+    String barcodeScanRes;
+    try {
+      barcodeScanRes = await FlutterBarcodeScanner.scanBarcode('#332FD0', 'Cancel', true, ScanMode.QR);
+      print('Result: $barcodeScanRes');
+      emit(HydranLoading());
+      // if (barcodeScanRes == '-1') {
+      //   EasyLoading.showInfo('Di Batalkan');
+      // } else {
+      emit(HydranId(idHydran: barcodeScanRes));
+      // }
+    } on PlatformException {
+      EasyLoading.showError('Failed to get Platform version .');
+    }
   }
 }

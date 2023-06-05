@@ -6,6 +6,7 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_maps_apar/source/repository/repository.dart';
 import 'package:flutter_maps_apar/source/router/string.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:meta/meta.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -18,7 +19,13 @@ class AuthCubit extends Cubit<AuthState> {
   void splashScreen(context) async {
     SharedPreferences pref = await SharedPreferences.getInstance();
     var username = pref.getString('username');
-    await Future.delayed(Duration(seconds: 2));
+    LocationPermission permission = await Geolocator.checkPermission();
+    print(permission);
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      print(permission);
+    }
+    await Future.delayed(const Duration(seconds: 2));
     if (username == null) {
       Navigator.pushNamedAndRemoveUntil(context, LOGIN, (route) => false);
     } else {
@@ -31,7 +38,7 @@ class AuthCubit extends Cubit<AuthState> {
     SharedPreferences pref = await SharedPreferences.getInstance();
     var device_uuid;
     DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
-    
+
     if (Platform.isIOS) {
       var iosDeviceInfo = await deviceInfo.iosInfo;
       print("IOS: ${iosDeviceInfo.identifierForVendor}");
@@ -51,13 +58,13 @@ class AuthCubit extends Cubit<AuthState> {
         pref.setString('nama', json['data']['nama']);
         pref.setString('gender', json['data']['gender']);
         pref.setString('user_roles', jsonEncode(json['data']['user_roles']));
-        await Future.delayed(Duration(seconds: 1));
+        await Future.delayed(const Duration(seconds: 1));
         Navigator.pushNamedAndRemoveUntil(context, BOTTOM_NAV, (route) => false);
       }
     });
   }
 
-  void logout(context,username) async {
+  void logout(context, username) async {
     SharedPreferences pref = await SharedPreferences.getInstance();
     emit(LogoutLoading());
     myRepository!.logout(username).then((value) {

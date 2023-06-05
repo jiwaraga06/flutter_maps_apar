@@ -51,30 +51,6 @@ class _UserState extends State<User> {
   //     print(url.split('/')[url.split('/').length - 2]);
   //     print(url.split('/')[url.split('/').length - 1]);
 
-  void baik(id_task) async {
-    var a = isiTask.indexWhere((element) => element.id_task == id_task);
-    print(a);
-    if (a != -1) {
-      setState(() {
-        isiTask[a].photo = null;
-        isiTask[a].status = 'V';
-        isiTask[a].note = null;
-        isiTask[a].timestamp = date.toString();
-      });
-    } else if (a == -1) {
-      setState(
-        () {
-          IsiTask task = IsiTask(id_task, '', '', '', date);
-          task.id_task = id_task;
-          task.photo = null;
-          task.status = 'V';
-          task.note = null;
-          isiTask.add(task);
-        },
-      );
-    }
-  }
-
   void save(ref, inisial, datatask) {
     BlocProvider.of<InsertaskCubit>(context).saveTask(ref, inisial, isiTask, datatask);
   }
@@ -114,13 +90,13 @@ class _UserState extends State<User> {
                           elevation: 10,
                           duration: Duration(seconds: 2),
                           behavior: SnackBarBehavior.floating,
-                          dismissDirection: DismissDirection.startToEnd,
+                          showCloseIcon: true,
                           margin: EdgeInsets.all(5),
                         );
                         ScaffoldMessenger.of(context).showSnackBar(snackdemo);
                       });
                     },
-                    icon: Icon(Icons.refresh));
+                    icon: const Icon(Icons.refresh));
               }
               return Container();
             },
@@ -155,7 +131,7 @@ class _UserState extends State<User> {
           if (state is ScanqrLoading) {
             return FloatingActionButton(
               onPressed: () {
-                BlocProvider.of<ScanqrCubit>(context).scanqr();
+                BlocProvider.of<ScanqrCubit>(context).scanqr(context);
               },
               backgroundColor: color2,
               child: const Icon(Icons.qr_code_2_sharp, color: Colors.white),
@@ -164,7 +140,7 @@ class _UserState extends State<User> {
           if (state is ScanqrLoaded == false) {
             return FloatingActionButton(
               onPressed: () {
-                BlocProvider.of<ScanqrCubit>(context).scanqr();
+                BlocProvider.of<ScanqrCubit>(context).scanqr(context);
               },
               backgroundColor: color2,
               child: const Icon(Icons.qr_code_2_sharp, color: Colors.white),
@@ -204,7 +180,7 @@ class _UserState extends State<User> {
                   label: 'Pindai Kode QR',
                   labelStyle: const TextStyle(fontSize: 18.0),
                   onTap: () {
-                    BlocProvider.of<ScanqrCubit>(context).scanqr();
+                    BlocProvider.of<ScanqrCubit>(context).scanqr(context);
                   },
                 ),
               ],
@@ -212,7 +188,7 @@ class _UserState extends State<User> {
           }
           return FloatingActionButton(
             onPressed: () {
-              BlocProvider.of<ScanqrCubit>(context).scanqr();
+              BlocProvider.of<ScanqrCubit>(context).scanqr(context);
             },
             backgroundColor: color2,
             child: const Icon(Icons.qr_code_2_sharp, color: Colors.white),
@@ -235,8 +211,8 @@ class _UserState extends State<User> {
               ),
             );
           }
-          var json = (state as ScanqrLoaded).json;
           var task = (state as ScanqrLoaded).task;
+          var json = (state as ScanqrLoaded).json;
           var statusCode = (state as ScanqrLoaded).statusCode;
           if (json.isEmpty && task.isEmpty) {
             return Center(
@@ -266,157 +242,139 @@ class _UserState extends State<User> {
           if (statusCode != 200) {
             return Container();
           }
-          return ListView(
-            children: [
-              ListView.builder(
-                physics: const NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                itemCount: task.length,
-                itemBuilder: (BuildContext context, int index) {
-                  var a = task[index];
-                  print(isiTask.indexWhere((element) => element.id_task == a['id_task']));
-                  return Container(
-                    margin: const EdgeInsets.all(8.0),
-                    padding: const EdgeInsets.all(8.0),
-                    decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(8.0), boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.5),
-                        blurRadius: 2.3,
-                        spreadRadius: 2.3,
-                        offset: Offset(1, 3),
-                      ),
-                    ]),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Badge(
-                          backgroundColor: const Color(0xFF482121),
-                          label: const Text('Nomer Task', style: TextStyle(fontSize: 11.5)),
-                          // backgroundColor: Colors.white,
-                          child: Container(
-                              margin: const EdgeInsets.only(top: 4.0, bottom: 8.0),
-                              width: 32,
-                              height: 32,
-                              alignment: Alignment.center,
-                              decoration: BoxDecoration(
-                                // color: Colors.blue,
-                                color: isiTask.indexWhere((element) => element.id_task == a['id_task']) != -1 ? Colors.green[600] : Color(0XFFA13333),
-                                borderRadius: BorderRadius.circular(80.0),
-                              ),
-                              child: Text(
-                                a['id_task'].toString(),
-                                style: const TextStyle(fontSize: 18, color: Colors.white),
-                              )),
+          return ListView.builder(
+            shrinkWrap: true,
+            itemCount: task.length,
+            itemBuilder: (BuildContext context, int index) {
+              var a = task[index];
+              print(isiTask.indexWhere((element) => element.id_task == a['id_task']));
+              return Container(
+                margin: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.all(8.0),
+                decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(8.0), boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.3),
+                    blurRadius: 1.2,
+                    spreadRadius: 2.3,
+                    offset: const Offset(1, 3),
+                  ),
+                ]),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                        margin: const EdgeInsets.only(top: 4.0, bottom: 8.0),
+                        width: 32,
+                        height: 32,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          // color: Colors.blue,
+                          color: isiTask.indexWhere((element) => element.id_task == a['id_task']) != -1 ? Colors.green[600] : const Color(0XFFA13333),
+                          borderRadius: BorderRadius.circular(80.0),
                         ),
-                        Text(a['task'], textAlign: TextAlign.center, style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w600)),
-                        const SizedBox(height: 8.0),
-                        LayoutBuilder(builder: (BuildContext context, BoxConstraints constraints) {
-                          if (constraints.maxWidth <= 400) {
-                            return Center(
-                              child: ToggleSwitch(
-                                customWidths: const [150, 150],
-                                initialLabelIndex: groupValue[index],
-                                cornerRadius: 20.0,
-                                activeFgColor: Colors.white,
-                                inactiveBgColor: Colors.grey,
-                                inactiveFgColor: Colors.white,
-                                totalSwitches: 2,
-                                customTextStyles: const [
-                                  TextStyle(fontSize: 17),
-                                  TextStyle(fontSize: 17),
-                                ],
-                                labels: const ['Tidak Baik', 'Baik'],
-                                icons: const [FontAwesomeIcons.thumbsDown, FontAwesomeIcons.thumbsUp],
-                                activeBgColors: const [
-                                  [colorBtnCancel],
-                                  [Colors.blue],
-                                ],
-                                onToggle: (id) {
-                                  print(a['task']);
-                                  print('switched to: $id');
-                                  setState(() {
-                                    groupValue[index] = id!;
-                                  });
-                                 
-                                },
-                              ),
-                            );
-                          } else {
-                            return Center(
-                              child: ToggleSwitch(
-                                customWidths: const [250, 250],
-                                initialLabelIndex: groupValue[index],
-                                cornerRadius: 20.0,
-                                activeFgColor: Colors.white,
-                                inactiveBgColor: Colors.grey,
-                                inactiveFgColor: Colors.white,
-                                totalSwitches: 2,
-                                customTextStyles: const [
-                                  TextStyle(fontSize: 17),
-                                  TextStyle(fontSize: 17),
-                                ],
-                                labels: const ['Tidak Baik', 'Baik'],
-                                icons: const [FontAwesomeIcons.thumbsDown, FontAwesomeIcons.thumbsUp],
-                                activeBgColors: const [
-                                  [colorBtnCancel],
-                                  [Colors.blue],
-                                ],
-                                onToggle: (id) {
-                                  print(a['task']);
-                                  print('switched to: $id');
-                                  setState(() {
-                                    groupValue[index] = id!;
-                                  });
-                                  if (groupValue[index] == 1) {
-                                    baik(a['id_task']);
-                                  } else if (groupValue[index] == 0) {
-                                    var res = isiTask.indexWhere((element) => element.id_task == a['id_task'] && element.status == "V");
-                                    if (res != -1) {
-                                      isiTask.removeWhere((element) => element.id_task == a['id_task']);
-                                    }
-                                  }
-                                },
-                              ),
-                            );
-                          }
-                        }),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: CustomButton(
-                            color: basic2,
-                            splashColor: color2,
-                            text: 'Tambahkan Keterangan',
-                            textStyle: const TextStyle(fontWeight: FontWeight.w600, color: Colors.white),
-                            onTap: groupValue[index] == -1
-                                ? () {
-                                    EasyLoading.showInfo('Status belum di pilih');
-                                  }
-                                : () {
-                                    // fillask(a['id_task']);
-                                    Navigator.push(context, MaterialPageRoute(
-                                      builder: (context) {
-                                        return Insert(
-                                          status: groupValue[index],
-                                          isitask: isiTask,
-                                          id_task: a['id_task'],
-                                          voidCallback: () => setState(() {
-                                            isiTask;
-                                          }),
-                                        );
-                                      },
-                                    ));
-                                  },
+                        child: const Text(
+                          "",
+                          style: TextStyle(fontSize: 18, color: Colors.white),
+                        )),
+                    Text(a['task'], textAlign: TextAlign.center, style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w600)),
+                    const SizedBox(height: 8.0),
+                    LayoutBuilder(builder: (BuildContext context, BoxConstraints constraints) {
+                      if (constraints.maxWidth <= 400) {
+                        return Center(
+                          child: ToggleSwitch(
+                            customWidths: const [150, 150],
+                            initialLabelIndex: groupValue[index],
+                            cornerRadius: 20.0,
+                            activeFgColor: Colors.white,
+                            inactiveBgColor: Colors.grey,
+                            inactiveFgColor: Colors.white,
+                            totalSwitches: 2,
+                            customTextStyles: const [
+                              TextStyle(fontSize: 17),
+                              TextStyle(fontSize: 17),
+                            ],
+                            labels: const ['Tidak Baik', 'Baik'],
+                            icons: const [FontAwesomeIcons.thumbsDown, FontAwesomeIcons.thumbsUp],
+                            activeBgColors: const [
+                              [colorBtnCancel],
+                              [Colors.blue],
+                            ],
+                            onToggle: (id) {
+                              print(a['task']);
+                              print('switched to: $id');
+                              setState(() {
+                                groupValue[index] = id!;
+                              });
+                            },
                           ),
-                        ),
-                        const SizedBox(height: 8),
-                        const Divider(color: basic, thickness: 2),
-                        const SizedBox(height: 8)
-                      ],
+                        );
+                      } else {
+                        return Center(
+                          child: ToggleSwitch(
+                            customWidths: const [250, 250],
+                            initialLabelIndex: groupValue[index],
+                            cornerRadius: 20.0,
+                            activeFgColor: Colors.white,
+                            inactiveBgColor: Colors.grey,
+                            inactiveFgColor: Colors.white,
+                            totalSwitches: 2,
+                            customTextStyles: const [
+                              TextStyle(fontSize: 17),
+                              TextStyle(fontSize: 17),
+                            ],
+                            labels: const ['Tidak Baik', 'Baik'],
+                            icons: const [FontAwesomeIcons.thumbsDown, FontAwesomeIcons.thumbsUp],
+                            activeBgColors: const [
+                              [colorBtnCancel],
+                              [Colors.blue],
+                            ],
+                            onToggle: (id) {
+                              print(a['task']);
+                              print('switched to: $id');
+                              setState(() {
+                                groupValue[index] = id!;
+                              });
+                              isiTask.removeWhere((element) => element.id_task == a['id_task']);
+                            },
+                          ),
+                        );
+                      }
+                    }),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: CustomButton(
+                        color: basic2,
+                        splashColor: color2,
+                        text: 'Tambahkan Keterangan',
+                        textStyle: const TextStyle(fontWeight: FontWeight.w600, color: Colors.white),
+                        onTap: groupValue[index] == -1
+                            ? () {
+                                EasyLoading.showInfo('Status belum di pilih');
+                              }
+                            : () {
+                                // fillask(a['id_task']);
+                                Navigator.push(context, MaterialPageRoute(
+                                  builder: (context) {
+                                    return Insert(
+                                      status: groupValue[index],
+                                      isitask: isiTask,
+                                      id_task: a['id_task'],
+                                      voidCallback: () => setState(() {
+                                        isiTask;
+                                      }),
+                                    );
+                                  },
+                                ));
+                              },
+                      ),
                     ),
-                  );
-                },
-              ),
-            ],
+                    const SizedBox(height: 8),
+                    const Divider(color: basic, thickness: 2),
+                    const SizedBox(height: 8)
+                  ],
+                ),
+              );
+            },
           );
         },
       ),

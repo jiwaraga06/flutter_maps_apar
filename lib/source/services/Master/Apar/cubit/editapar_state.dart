@@ -6,6 +6,11 @@ abstract class EditaparState {}
 class EditaparInitial extends EditaparState {}
 
 class EditaparLoading extends EditaparState {}
+class EditaparAkurasi extends EditaparState {
+  final double? accuracy;
+
+  EditaparAkurasi({this.accuracy});
+}
 
 class EditaparLoaded extends EditaparState {
   final int? statusCode;

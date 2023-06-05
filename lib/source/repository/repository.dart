@@ -35,6 +35,11 @@ class MyRepository {
     return json;
   }
 
+  Future getmasteraparedit(id) async {
+    var json = await myNetwork!.getmasteraparedit(id);
+    return json;
+  }
+
   Future putmasterapar(id, body) async {
     var json = await myNetwork!.putmasterapar(id, body);
     return json;

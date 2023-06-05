@@ -143,6 +143,27 @@ class MyNetwork {
       EasyLoading.showError(e.toString(), duration: const Duration(seconds: 2));
     }
   }
+
+  Future getmasteraparedit(id) async {
+    try {
+      var url = Uri.parse(MyApi.getmasteraparedit(id));
+      var response = await http.get(url, headers: {'Authorization': TOKEN});
+      return response;
+    } on TimeoutException {
+      EasyLoading.dismiss();
+      EasyLoading.showError('Masalah Koneksi \n Jaringan lemah', duration: const Duration(seconds: 2));
+    } on SocketException {
+      EasyLoading.dismiss();
+      EasyLoading.showError('Masalah Koneksi \n data mati', duration: const Duration(seconds: 2));
+    } on HttpException catch (e) {
+      EasyLoading.dismiss();
+      EasyLoading.showError(e.message, duration: const Duration(seconds: 2));
+    } on Error catch (e) {
+      EasyLoading.dismiss();
+      EasyLoading.showError(e.toString(), duration: const Duration(seconds: 2));
+    }
+  }
+
   Future getmasterhydran() async {
     try {
       var url = Uri.parse(MyApi.getmasterhydran());
@@ -188,6 +209,7 @@ class MyNetwork {
       EasyLoading.showError(e.toString(), duration: const Duration(seconds: 2));
     }
   }
+
   Future putmasterhydran(id, body) async {
     try {
       var url = Uri.parse(MyApi.putmasterhydran(id));
