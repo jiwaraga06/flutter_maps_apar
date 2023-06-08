@@ -90,7 +90,21 @@ class _HydranState extends State<Hydran> {
             }
           }
         },
-        child: BlocBuilder<HydranCubit, HydranState>(
+        child: BlocConsumer<HydranCubit, HydranState>(
+          listener: (context, state) {
+            if (state is HydranLoaded) {
+              var json = state.json;
+              if (json['isService'] == 1) {
+                setState(() {
+                  isService = !isService;
+                });
+              } else {
+                setState(() {
+                  isService = !isService;
+                });
+              }
+            }
+          },
           builder: (context, state) {
             if (state is HydranLoading) {
               return const Center(
@@ -134,7 +148,7 @@ class _HydranState extends State<Hydran> {
                   padding: const EdgeInsets.all(14.0),
                   child: Table(
                     columnWidths: const {
-                      0: FixedColumnWidth(100),
+                      0: FixedColumnWidth(110),
                       1: FixedColumnWidth(15),
                     },
                     children: [
@@ -142,6 +156,22 @@ class _HydranState extends State<Hydran> {
                         const Text('Nama Hydran', style: TextStyle(fontSize: 16)),
                         const Text(':', style: TextStyle(fontSize: 16)),
                         Text(json['nama'], style: const TextStyle(fontWeight: FontWeight.bold)),
+                      ]),
+                      TableRow(children: [
+                        const Text('Ket. Status', style: TextStyle(fontSize: 16)),
+                        const Text(':', style: TextStyle(fontSize: 16)),
+                        if (json['aktif'] == 1) Text("Aktif", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.green[600])),
+                        if (json['aktif'] == 0) Text("Tidak Aktif", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.red[600])),
+                        if (json['aktif'] == null) Text("Tidak Aktif", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.red[600])),
+                      ]),
+                      TableRow(children: [
+                        const Text('Ket. Service', style: TextStyle(fontSize: 16)),
+                        const Text(':', style: TextStyle(fontSize: 16)),
+                        if (json['isService'] == 1)
+                          Text("Sudah Service", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.green[600])),
+                        if (json['isService'] == 0) Text("Belum Service", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.red[600])),
+                        if (json['isService'] == null)
+                          Text("Belum Service", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.red[600])),
                       ]),
                     ],
                   ),
@@ -215,9 +245,11 @@ class _HydranState extends State<Hydran> {
                     color: basic,
                     text: 'SUBMIT',
                     textStyle: const TextStyle(color: Colors.white),
-                    onTap: () {
-                      save(json['uuid'], json['lati'], json['longi']);
-                    },
+                    onTap: json['aktif'] == 1
+                        ? () {
+                            save(json['uuid'], json['lati'], json['longi']);
+                          }
+                        : null,
                   ),
                 )
               ],

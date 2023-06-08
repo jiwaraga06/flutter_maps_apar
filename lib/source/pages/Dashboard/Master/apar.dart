@@ -34,7 +34,6 @@ class _AparState extends State<Apar> {
   void initState() {
     super.initState();
     BlocProvider.of<AparCubit>(context).initial();
-    BlocProvider.of<JenisaparCubit>(context).getjenisapar();
     // BlocProvider.of<JenisaparCubit>(context).getjenisapar();
   }
 
@@ -96,7 +95,22 @@ class _AparState extends State<Apar> {
             }
           }
         },
-        child: BlocBuilder<AparCubit, AparState>(
+        child: BlocConsumer<AparCubit, AparState>(
+          listener: (context, state) {
+            if (state is AparLoaded) {
+              BlocProvider.of<JenisaparCubit>(context).getjenisapar();
+              var json = state.json;
+              if (json['isService'] == 1) {
+                setState(() {
+                  isService = !isService;
+                });
+              } else {
+                setState(() {
+                  isService = !isService;
+                });
+              }
+            }
+          },
           // GET RESULT SCAN APAR
           builder: (context, state) {
             if (state is AparLoading) {
@@ -109,6 +123,7 @@ class _AparState extends State<Apar> {
             }
             var json = (state as AparLoaded).json;
             var statusCode = (state as AparLoaded).statusCode;
+
             if (statusCode == 0 && json.isEmpty) {
               return Center(
                 child: Column(
@@ -150,11 +165,20 @@ class _AparState extends State<Apar> {
                         Text(json['expired_date'], style: const TextStyle(fontWeight: FontWeight.bold)),
                       ]),
                       TableRow(children: [
-                        const Text('Status', style: TextStyle(fontSize: 16)),
+                        const Text('Ket. Status', style: TextStyle(fontSize: 16)),
                         const Text(':', style: TextStyle(fontSize: 16)),
                         if (json['aktif'] == 1) Text("Aktif", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.green[600])),
                         if (json['aktif'] == 0) Text("Tidak Aktif", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.red[600])),
                         if (json['aktif'] == null) Text("Tidak Aktif", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.red[600])),
+                      ]),
+                      TableRow(children: [
+                        const Text('Ket. Service', style: TextStyle(fontSize: 16)),
+                        const Text(':', style: TextStyle(fontSize: 16)),
+                        if (json['isService'] == 1)
+                          Text("Sudah Service", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.green[600])),
+                        if (json['isService'] == 0) Text("Belum Service", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.red[600])),
+                        if (json['isService'] == null)
+                          Text("Belum Service", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.red[600])),
                       ]),
                       TableRow(children: [
                         const Text('Kapasitas', style: TextStyle(fontSize: 16)),
@@ -170,7 +194,20 @@ class _AparState extends State<Apar> {
                 ),
                 Padding(
                   padding: const EdgeInsets.only(left: 8.0, top: 12.0, right: 8.0),
-                  child: BlocBuilder<JenisaparCubit, JenisaparState>(
+                  child: BlocConsumer<JenisaparCubit, JenisaparState>(
+                    listener: (context, state) {
+                      if (state is JenisaparLoaded) {
+                        var jenis = state.json;
+                        print('JENIS');
+                        print(jenis.where((element) => element['id'] == json['id_jenis']).toList());
+                        var value = jenis.where((element) => element['id'] == json['id_jenis']).toList()[0]['nama'];
+                        var valueid = jenis.where((element) => element['id'] == json['id_jenis']).toList()[0]['id'];
+                        setState(() {
+                          valuejenis = value;
+                          valueid = valueid;
+                        });
+                      }
+                    },
                     builder: (context, state) {
                       if (state is JenisaparLoading) {
                         return Container();
@@ -272,9 +309,11 @@ class _AparState extends State<Apar> {
                     color: basic,
                     text: 'SUBMIT',
                     textStyle: const TextStyle(color: Colors.white, fontSize: 16),
-                    onTap: () {
-                      save(json['uuid'], json['lati'], json['longi']);
-                    },
+                    onTap: json['aktif'] == 1
+                        ? () {
+                            save(json['uuid'], json['lati'], json['longi']);
+                          }
+                        : null,
                   ),
                 )
               ],

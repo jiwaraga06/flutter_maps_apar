@@ -8,7 +8,7 @@
         android:label="Monitoring Apar"
         android:name="${applicationName}"
         android:usesCleartextTraffic="true"
-        android:icon="@mipmap/apar">
+        android:icon="@mipmap/logoapar">
         <activity
             android:name=".MainActivity"
             android:exported="true"
