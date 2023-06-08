@@ -23,7 +23,7 @@ class _EditAparState extends State<EditApar> {
   bool isService = false;
 
   void save() {
-    BlocProvider.of<EditaparCubit>(context).putmasterapar(widget.id, isService == true ? 1 : 0);
+    // BlocProvider.of<EditaparCubit>(context).putmasterapar(widget.id, isService == true ? 1 : 0,"");
   }
 
   @override

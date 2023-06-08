@@ -20,7 +20,7 @@ class _EditHydranState extends State<EditHydran> {
   bool isService = false;
 
   void save() {
-    BlocProvider.of<EdithydranCubit>(context).putmasterhydran(widget.id, isService == true ? 1 : 0);
+    // BlocProvider.of<EdithydranCubit>(context).putmasterhydran(widget.id, isService == true ? 1 : 0);
   }
 
   @override

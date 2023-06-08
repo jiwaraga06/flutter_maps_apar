@@ -21,11 +21,11 @@ class InsertaskCubit extends Cubit<InsertaskState> {
     DateTime date = DateTime.now();
     var tanggal = date.toString().split(' ')[0];
 
-    // if (datalist.isEmpty) {
-    //   EasyLoading.showError("Belum ada yang diperiksa", duration: const Duration(seconds: 2));
-    // } else if (datalist.length != datatask.length) {
-    //   EasyLoading.showError("Task Belum Terisi Semua", duration: const Duration(seconds: 2));
-    // } else {
+    if (datalist.isEmpty) {
+      EasyLoading.showError("Belum ada yang diperiksa", duration: const Duration(seconds: 2));
+    } else if (datalist.length != datatask.length) {
+      EasyLoading.showError("Task Belum Terisi Semua", duration: const Duration(seconds: 2));
+    } else {
     var body = {
       "tanggal": "$tanggal",
       "user": "$username",
@@ -34,13 +34,13 @@ class InsertaskCubit extends Cubit<InsertaskState> {
       "data_list": datalist,
     };
     print("Body: $body");
-    //   myRepository!.insertTask(jsonEncode(body)).then((value) {
-    //     var json = jsonDecode(value.body);
-    //     var statusCode = value.statusCode;
-    //     print('Result statusCode: $statusCode');
-    //     print('Result Insert: $json');
-    //     emit(InsertaskLoaded(statusCode: statusCode, json: json));
-    //   });
-    // }
+      myRepository!.insertTask(jsonEncode(body)).then((value) {
+        var json = jsonDecode(value.body);
+        var statusCode = value.statusCode;
+        print('Result statusCode: $statusCode');
+        print('Result Insert: $json');
+        emit(InsertaskLoaded(statusCode: statusCode, json: json));
+      });
+    }
   }
 }

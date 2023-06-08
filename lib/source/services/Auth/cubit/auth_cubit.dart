@@ -16,6 +16,15 @@ class AuthCubit extends Cubit<AuthState> {
   final MyRepository? myRepository;
   AuthCubit({required this.myRepository}) : super(AuthInitial());
 
+  void getradius() async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    myRepository!.getradius().then((value) {
+      var json = jsonDecode(value.body);
+      print('Radius: $json');
+      pref.setString('radius', json.toString());
+    });
+  }
+
   void splashScreen(context) async {
     SharedPreferences pref = await SharedPreferences.getInstance();
     var username = pref.getString('username');

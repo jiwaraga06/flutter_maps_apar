@@ -7,10 +7,10 @@ class HydranInitial extends HydranState {}
 
 class HydranLoading extends HydranState {}
 
-class HydranId extends HydranState {
-  final String? idHydran;
+class HydranAccuracy extends HydranState {
+  final double? accuracy;
 
-  HydranId({this.idHydran});
+  HydranAccuracy({this.accuracy});
 }
 
 class HydranLoaded extends HydranState {

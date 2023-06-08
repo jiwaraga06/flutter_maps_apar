@@ -11,6 +11,7 @@ import 'package:flutter_maps_apar/source/services/Auth/cubit/change_pass_cubit.d
 import 'package:flutter_maps_apar/source/services/Auth/cubit/profile_cubit.dart';
 import 'package:flutter_maps_apar/source/services/Master/Apar/cubit/apar_cubit.dart';
 import 'package:flutter_maps_apar/source/services/Master/Apar/cubit/editapar_cubit.dart';
+import 'package:flutter_maps_apar/source/services/Master/Apar/cubit/jenisapar_cubit.dart';
 import 'package:flutter_maps_apar/source/services/Master/Hydran/cubit/edithydran_cubit.dart';
 import 'package:flutter_maps_apar/source/services/Master/Hydran/cubit/hydran_cubit.dart';
 import 'package:flutter_maps_apar/source/services/users/cubit/insertask_cubit.dart';
@@ -74,6 +75,9 @@ class MyApp extends StatelessWidget {
           create: (context) => ScanqrCubit(myRepository: myRepository),
         ),
         // MODUL MASTER
+        BlocProvider(
+          create: (context) => JenisaparCubit(myRepository: myRepository),
+        ),
         BlocProvider(
           create: (context) => AparCubit(myRepository: myRepository),
         ),

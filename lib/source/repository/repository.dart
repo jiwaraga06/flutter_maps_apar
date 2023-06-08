@@ -5,6 +5,10 @@ class MyRepository {
 
   MyRepository({required this.myNetwork});
 
+  Future getradius() async {
+    var json = await myNetwork!.getradius();
+    return json;
+  }
   Future login(username, password, deviceid) async {
     var json = await myNetwork!.login(username, password, deviceid);
     return json;
@@ -25,8 +29,14 @@ class MyRepository {
     return json;
   }
 
+// APAR
   Future insertTask(body) async {
     var json = await myNetwork!.insertTask(body);
+    return json;
+  }
+
+  Future getjenisapar() async {
+    var json = await myNetwork!.getjenisapar();
     return json;
   }
 
@@ -35,8 +45,8 @@ class MyRepository {
     return json;
   }
 
-  Future getmasteraparedit(id) async {
-    var json = await myNetwork!.getmasteraparedit(id);
+  Future getmasteraparedit(ref) async {
+    var json = await myNetwork!.getmasteraparedit(ref);
     return json;
   }
 
@@ -45,8 +55,14 @@ class MyRepository {
     return json;
   }
 
+  // HYDRAN
+
   Future getmasterhydran() async {
     var json = await myNetwork!.getmasterhydran();
+    return json;
+  }
+  Future getmasterhydranedit(ref) async {
+    var json = await myNetwork!.getmasterhydranedit(ref);
     return json;
   }
 

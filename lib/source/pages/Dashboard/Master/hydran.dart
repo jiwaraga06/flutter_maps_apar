@@ -1,11 +1,13 @@
 import 'package:expansion_tile_card/expansion_tile_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_maps_apar/source/pages/Dashboard/Master/edithydran.dart';
 import 'package:flutter_maps_apar/source/services/Master/Hydran/cubit/edithydran_cubit.dart';
 import 'package:flutter_maps_apar/source/services/Master/Hydran/cubit/hydran_cubit.dart';
 import 'package:flutter_maps_apar/source/widget/color.dart';
 import 'package:flutter_maps_apar/source/widget/customButton.dart';
+import 'package:flutter_maps_apar/source/widget/customDialog.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 
 class Hydran extends StatefulWidget {
@@ -17,9 +19,10 @@ class Hydran extends StatefulWidget {
 
 class _HydranState extends State<Hydran> {
   bool isService = false;
+  bool changePosition = false;
 
-  void save(id) {
-    BlocProvider.of<EdithydranCubit>(context).putmasterhydran(id, isService == true ? 1 : 0);
+  void save(uuid, oldLatiHydran, oldLongiHydran) {
+    BlocProvider.of<EdithydranCubit>(context).putmasterhydran(uuid, isService == true ? 1 : 0, changePosition, oldLatiHydran, oldLongiHydran);
   }
 
   @override
@@ -41,17 +44,17 @@ class _HydranState extends State<Hydran> {
           if (state is HydranLoaded == false) {
             return FloatingActionButton(
               onPressed: () {
-                BlocProvider.of<HydranCubit>(context).scanhydran();
+                BlocProvider.of<HydranCubit>(context).scanhydran(context);
               },
               backgroundColor: color2,
               child: const Icon(Icons.qr_code_2_sharp, color: Colors.white),
             );
           }
-          var idHydran = (state as HydranId).idHydran;
-          if (idHydran == null) {
+          var json = (state as HydranLoaded).json;
+          if (json.isEmpty) {
             return FloatingActionButton(
               onPressed: () {
-                BlocProvider.of<HydranCubit>(context).scanhydran();
+                BlocProvider.of<HydranCubit>(context).scanhydran(context);
               },
               backgroundColor: color2,
               child: const Icon(Icons.qr_code_2_sharp, color: Colors.white),
@@ -60,79 +63,167 @@ class _HydranState extends State<Hydran> {
           return Container();
         },
       ),
-      body: BlocBuilder<HydranCubit, HydranState>(
-        builder: (context, state) {
-          if (state is HydranLoading) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
+      body: BlocListener<EdithydranCubit, EdithydranState>(
+        listener: (context, state) {
+          if (state is EdithydranLoading) {
+            EasyLoading.show();
           }
-          if (state is HydranId == false) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: const [
-                  Text('Silahkan Pindai QR Hydran', style: TextStyle(fontSize: 16)),
-                ],
-              ),
-            );
+          if (state is EdithydranAkurasi) {
+            var akurasi = state.accuracy;
+            if (akurasi! > 20) {
+              EasyLoading.dismiss();
+              MyDialog.dialogAlert(context, 'Akurasi anda : $akurasi\nAkurasi tidak boleh lebih dari 20m');
+              BlocProvider.of<HydranCubit>(context).initial();
+            } else {
+              BlocProvider.of<HydranCubit>(context).initial();
+            }
           }
-          var idHydran = (state as HydranId).idHydran;
-          if (idHydran == null) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: const [
-                   Text('Silahkan Pindai QR Hydran', style: TextStyle(fontSize: 16)),
-                ],
-              ),
-            );
+          if (state is EdithydranLoaded) {
+            EasyLoading.dismiss();
+            var json = state.json;
+            var statusCode = state.statusCode;
+            if (statusCode == 200) {
+              MyDialog.dialogSuccess(context, json['message']);
+              BlocProvider.of<HydranCubit>(context).initial();
+            } else {
+              MyDialog.dialogAlert(context, json['message']);
+            }
           }
-          return ListView(
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(14.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    if (isService == true) const Text('Sudah Service', style: TextStyle(fontSize: 17)),
-                    if (isService == false) const Text('Belum Service', style: TextStyle(fontSize: 17)),
-                    FlutterSwitch(
-                      activeColor: color2,
-                      inactiveColor: colorBtnCancel,
-                      width: 125.0,
-                      height: 35.0,
-                      valueFontSize: 16.0,
-                      toggleSize: 25.0,
-                      value: isService,
-                      borderRadius: 30.0,
-                      onToggle: (val) {
-                        setState(() {
-                          isService = val;
-                          print(val);
-                        });
-                      },
-                    ),
+        },
+        child: BlocBuilder<HydranCubit, HydranState>(
+          builder: (context, state) {
+            if (state is HydranLoading) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+            if (state is HydranLoaded == false) {
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: const [
+                    Text('Silahkan Pindai QR Hydran', style: TextStyle(fontSize: 16)),
                   ],
                 ),
-              ),
-              const SizedBox(height: 12),
-              const Divider(thickness: 2),
-              const SizedBox(height: 6),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: CustomButton(
-                  color: basic,
-                  text: 'SAVE',
-                  textStyle: const TextStyle(color: Colors.white),
-                  onTap: () {
-                    save(1);
-                  },
+              );
+            }
+            var json = (state as HydranLoaded).json;
+            var statusCode = (state as HydranLoaded).statusCode;
+            if (statusCode == 0 && json.isEmpty) {
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: const [
+                    Text('Silahkan Pindai QR Hydran', style: TextStyle(fontSize: 16)),
+                  ],
                 ),
-              )
-            ],
-          );
-        },
+              );
+            } else if (json.isEmpty) {
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: const [
+                    Text('Silahkan Pindai QR Hydran', style: TextStyle(fontSize: 16)),
+                  ],
+                ),
+              );
+            }
+            return ListView(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(14.0),
+                  child: Table(
+                    columnWidths: const {
+                      0: FixedColumnWidth(100),
+                      1: FixedColumnWidth(15),
+                    },
+                    children: [
+                      TableRow(children: [
+                        const Text('Nama Hydran', style: TextStyle(fontSize: 16)),
+                        const Text(':', style: TextStyle(fontSize: 16)),
+                        Text(json['nama'], style: const TextStyle(fontWeight: FontWeight.bold)),
+                      ]),
+                    ],
+                  ),
+                ),
+                const Padding(
+                  padding: EdgeInsets.only(left: 8.0, top: 12.0),
+                  child: Text('Status Service', style: TextStyle(fontSize: 15)),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 8.0, bottom: 8.0, right: 8.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      if (isService == true) const Text('Sudah Service', style: TextStyle(fontSize: 17)),
+                      if (isService == false) const Text('Belum Service', style: TextStyle(fontSize: 17)),
+                      FlutterSwitch(
+                        activeColor: color2,
+                        inactiveColor: colorBtnCancel,
+                        width: 125.0,
+                        height: 35.0,
+                        valueFontSize: 16.0,
+                        toggleSize: 25.0,
+                        value: isService,
+                        borderRadius: 30.0,
+                        onToggle: (val) {
+                          setState(() {
+                            isService = val;
+                            print(val);
+                          });
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+                const Padding(
+                  padding: EdgeInsets.only(left: 8.0, top: 12.0),
+                  child: Text('Status Koordinat', style: TextStyle(fontSize: 15)),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 8.0, bottom: 8.0, right: 8.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      if (changePosition == true) const Text('Ganti Koordinat', style: TextStyle(fontSize: 17)),
+                      if (changePosition == false) const Text('Tetapkan Koordinat', style: TextStyle(fontSize: 17)),
+                      FlutterSwitch(
+                        activeColor: color2,
+                        inactiveColor: colorBtnCancel,
+                        width: 125.0,
+                        height: 35.0,
+                        valueFontSize: 16.0,
+                        toggleSize: 25.0,
+                        value: changePosition,
+                        borderRadius: 30.0,
+                        onToggle: (val) {
+                          setState(() {
+                            changePosition = val;
+                            print("Koordinat: $val");
+                          });
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 12),
+                const Divider(thickness: 2),
+                const SizedBox(height: 6),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: CustomButton(
+                    color: basic,
+                    text: 'SUBMIT',
+                    textStyle: const TextStyle(color: Colors.white),
+                    onTap: () {
+                      save(json['uuid'], json['lati'], json['longi']);
+                    },
+                  ),
+                )
+              ],
+            );
+          },
+        ),
       ),
       // body: BlocBuilder<HydranCubit, HydranState>(
       //   builder: (context, state) {

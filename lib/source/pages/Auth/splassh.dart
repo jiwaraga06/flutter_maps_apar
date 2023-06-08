@@ -15,6 +15,7 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     BlocProvider.of<AuthCubit>(context).splashScreen(context);
+    BlocProvider.of<AuthCubit>(context).getradius();
   }
 
   @override

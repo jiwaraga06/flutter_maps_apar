@@ -6,6 +6,7 @@ import 'package:flutter_maps_apar/source/pages/Dashboard/Master/editapar.dart';
 import 'package:flutter_maps_apar/source/router/string.dart';
 import 'package:flutter_maps_apar/source/services/Master/Apar/cubit/apar_cubit.dart';
 import 'package:flutter_maps_apar/source/services/Master/Apar/cubit/editapar_cubit.dart';
+import 'package:flutter_maps_apar/source/services/Master/Apar/cubit/jenisapar_cubit.dart';
 import 'package:flutter_maps_apar/source/widget/color.dart';
 import 'package:flutter_maps_apar/source/widget/customButton.dart';
 import 'package:flutter_maps_apar/source/widget/customDialog.dart';
@@ -21,15 +22,20 @@ class Apar extends StatefulWidget {
 
 class _AparState extends State<Apar> {
   bool isService = false;
+  bool changePosition = false;
+  var valuejenis = "Powder";
+  var valuejenisId = "3";
 
-  void save(id) {
-    BlocProvider.of<EditaparCubit>(context).putmasterapar(id, isService == true ? 1 : 0);
+  void save(uuid, oldLatiApar, oldLongiApar) {
+    BlocProvider.of<EditaparCubit>(context).putmasterapar(uuid, isService == true ? 1 : 0, valuejenisId, changePosition, oldLatiApar, oldLongiApar);
   }
 
   @override
   void initState() {
     super.initState();
     BlocProvider.of<AparCubit>(context).initial();
+    BlocProvider.of<JenisaparCubit>(context).getjenisapar();
+    // BlocProvider.of<JenisaparCubit>(context).getjenisapar();
   }
 
   @override
@@ -69,11 +75,13 @@ class _AparState extends State<Apar> {
             EasyLoading.show();
           }
           if (state is EditaparAkurasi) {
-            EasyLoading.dismiss();
             var akurasi = state.accuracy;
             if (akurasi! > 20) {
+              EasyLoading.dismiss();
               MyDialog.dialogAlert(context, 'Akurasi anda : $akurasi\nAkurasi tidak boleh lebih dari 20m');
               BlocProvider.of<AparCubit>(context).initial();
+            } else {
+              // BlocProvider.of<AparCubit>(context).initial();
             }
           }
           if (state is EditaparLoaded) {
@@ -101,13 +109,6 @@ class _AparState extends State<Apar> {
             }
             var json = (state as AparLoaded).json;
             var statusCode = (state as AparLoaded).statusCode;
-            if (json['isService'] == 1) {
-              setState(() {
-                // isService = true;
-              });
-            } else if (json['isService'] == 0) {
-              // isService = false;
-            }
             if (statusCode == 0 && json.isEmpty) {
               return Center(
                 child: Column(
@@ -163,8 +164,51 @@ class _AparState extends State<Apar> {
                     ],
                   ),
                 ),
+                const Padding(
+                  padding: EdgeInsets.only(left: 8.0, top: 12.0),
+                  child: Text('Jenis', style: TextStyle(fontSize: 15)),
+                ),
                 Padding(
-                  padding: const EdgeInsets.all(14.0),
+                  padding: const EdgeInsets.only(left: 8.0, top: 12.0, right: 8.0),
+                  child: BlocBuilder<JenisaparCubit, JenisaparState>(
+                    builder: (context, state) {
+                      if (state is JenisaparLoading) {
+                        return Container();
+                      }
+                      if (state is JenisaparLoaded == false) {
+                        return Container();
+                      }
+                      List list = (state as JenisaparLoaded).json;
+                      // print('FIRST: ${list.first['nama']}');
+                      return DropdownButton(
+                        value: valuejenis,
+                        isExpanded: true,
+                        hint: Text('Pilih Jenis Apar'),
+                        items: list.map((e) {
+                          return DropdownMenuItem(
+                            child: Text(e['nama']),
+                            value: e['nama'],
+                            onTap: () {
+                              print(e);
+                              valuejenisId = e['id'].toString();
+                            },
+                          );
+                        }).toList(),
+                        onChanged: (value) {
+                          setState(() {
+                            valuejenis = value.toString();
+                          });
+                        },
+                      );
+                    },
+                  ),
+                ),
+                const Padding(
+                  padding: EdgeInsets.only(left: 8.0, top: 12.0),
+                  child: Text('Status Service', style: TextStyle(fontSize: 15)),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 8.0, bottom: 8.0, right: 8.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -189,6 +233,36 @@ class _AparState extends State<Apar> {
                     ],
                   ),
                 ),
+                const Padding(
+                  padding: EdgeInsets.only(left: 8.0, top: 12.0),
+                  child: Text('Status Koordinat', style: TextStyle(fontSize: 15)),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 8.0, bottom: 8.0, right: 8.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      if (changePosition == true) const Text('Ganti Koordinat', style: TextStyle(fontSize: 17)),
+                      if (changePosition == false) const Text('Tetapkan Koordinat', style: TextStyle(fontSize: 17)),
+                      FlutterSwitch(
+                        activeColor: color2,
+                        inactiveColor: colorBtnCancel,
+                        width: 125.0,
+                        height: 35.0,
+                        valueFontSize: 16.0,
+                        toggleSize: 25.0,
+                        value: changePosition,
+                        borderRadius: 30.0,
+                        onToggle: (val) {
+                          setState(() {
+                            changePosition = val;
+                            print("Koordinat: $val");
+                          });
+                        },
+                      ),
+                    ],
+                  ),
+                ),
                 const SizedBox(height: 12),
                 const Divider(thickness: 2),
                 const SizedBox(height: 6),
@@ -196,10 +270,10 @@ class _AparState extends State<Apar> {
                   padding: const EdgeInsets.all(8.0),
                   child: CustomButton(
                     color: basic,
-                    text: 'SAVE',
-                    textStyle: const TextStyle(color: Colors.white),
+                    text: 'SUBMIT',
+                    textStyle: const TextStyle(color: Colors.white, fontSize: 16),
                     onTap: () {
-                      save(1);
+                      save(json['uuid'], json['lati'], json['longi']);
                     },
                   ),
                 )
