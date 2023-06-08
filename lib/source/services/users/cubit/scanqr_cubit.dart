@@ -15,7 +15,8 @@ part 'scanqr_state.dart';
 class ScanqrCubit extends Cubit<ScanqrState> {
   final MyRepository? myRepository;
   ScanqrCubit({required this.myRepository}) : super(ScanqrInitial());
-  var latitude, longitude;
+  var latitude = null;
+  var longitude = null;
 
   Future<void> scanqr(context) async {
     SharedPreferences pref = await SharedPreferences.getInstance();
@@ -43,6 +44,7 @@ class ScanqrCubit extends Cubit<ScanqrState> {
               EasyLoading.dismiss();
               latitude = json['lati'];
               longitude = json['longi'];
+              resultTask(radius, ref, inisial, latitude, longitude, context);
             }
           });
         } else if (inisial == 'H') {
@@ -56,60 +58,11 @@ class ScanqrCubit extends Cubit<ScanqrState> {
               EasyLoading.dismiss();
               latitude = json['lati'];
               longitude = json['longi'];
+              resultTask(radius, ref, inisial, latitude, longitude, context);
             }
           });
         }
         // GET DATA TASK
-        if (latitude != null && longitude != null) {
-          myRepository!.scanqr(ref, inisial).then((value) async {
-            var json = jsonDecode(value.body);
-            var statusCode = value.statusCode;
-            print('JSON: $json');
-            print('JSON: $statusCode');
-            EasyLoading.dismiss();
-            var task = [];
-            if (statusCode == 200) {
-              if (json['errors'] != null) {
-                emit(ScanqrLoading());
-                EasyLoading.showError('Unit Sedang di Service');
-                emit(ScanqrLoaded(statusCode: statusCode, json: json, task: []));
-              } else {
-                // LOKASI< HITUNG JARAK
-                await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.bestForNavigation).then((position) async {
-                  var akurasi = position.accuracy;
-                  print("Longitude: $longitude, Latitude: $latitude, Akurasi: $akurasi");
-                  var distance = Geolocator.distanceBetween(latitude, longitude, position.latitude, position.longitude);
-                  print('Distance: $distance');
-                  if (akurasi > 20) {
-                    if (distance >= radius) {
-                      MyDialog.dialogAlert(context, 'Akurasi dan Jarak Anda terlalu jauh\nAkurasi : $akurasi\nJarak : $distance');
-                    } else {
-                      MyDialog.dialogAlert(context, 'Akurasi anda : $akurasi\nAkurasi tidak boleh lebih dari 20 m');
-                    }
-                  } else {
-                    if (distance >= radius) {
-                      MyDialog.dialogAlert(context, 'Jarak Anda : $distance\nJarak tidak boleh lebih dari $radius m');
-                    } else {
-                      emit(ScanqrLoading());
-                      json.forEach((key, b) {
-                        if (b is Map) {
-                          task.add(b);
-                          print(task);
-                          emit(ScanqrLoaded(statusCode: statusCode, json: json, task: task));
-                        } else {
-                          emit(ScanqrLoaded(statusCode: statusCode, json: json, task: []));
-                        }
-                      });
-                    }
-                  }
-                });
-              }
-            } else {
-              EasyLoading.showError(json['message']);
-              emit(ScanqrLoaded(statusCode: statusCode, json: json, task: []));
-            }
-          });
-        }
       }
     } on PlatformException {
       EasyLoading.showError('Failed to get Platform version .');
@@ -118,5 +71,56 @@ class ScanqrCubit extends Cubit<ScanqrState> {
 
   void inisialisasi() {
     emit(ScanqrLoaded(json: {}, task: {}));
+  }
+
+  void resultTask(radius, ref, inisial, lati, longi, context) async {
+    myRepository!.scanqr(ref, inisial).then((value) async {
+      var json = jsonDecode(value.body);
+      var statusCode = value.statusCode;
+      print('JSON: $json');
+      print('JSON: $statusCode');
+      var task = [];
+      if (statusCode == 200) {
+        EasyLoading.dismiss();
+        if (json['errors'] != null) {
+          emit(ScanqrLoading());
+          EasyLoading.showError('Unit Sedang di Service');
+          emit(ScanqrLoaded(statusCode: statusCode, json: json, task: []));
+        } else {
+          // LOKASI< HITUNG JARAK
+          await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.bestForNavigation).then((position) async {
+            var akurasi = position.accuracy;
+            print("Longitude: $longitude, Latitude: $latitude, Akurasi: $akurasi");
+            var distance = Geolocator.distanceBetween(latitude, longitude, position.latitude, position.longitude);
+            print('Distance: $distance');
+            if (akurasi > 20) {
+              if (distance >= radius) {
+                MyDialog.dialogAlert(context, 'Akurasi dan Jarak Anda terlalu jauh\nAkurasi : $akurasi\nJarak : $distance');
+              } else {
+                MyDialog.dialogAlert(context, 'Akurasi anda : $akurasi\nAkurasi tidak boleh lebih dari 20 m');
+              }
+            } else {
+              if (distance >= radius) {
+                MyDialog.dialogAlert(context, 'Jarak Anda : $distance\nJarak tidak boleh lebih dari $radius m');
+              } else {
+                emit(ScanqrLoading());
+                json.forEach((key, b) {
+                  if (b is Map) {
+                    task.add(b);
+                    print(task);
+                    emit(ScanqrLoaded(statusCode: statusCode, json: json, task: task));
+                  } else {
+                    emit(ScanqrLoaded(statusCode: statusCode, json: json, task: []));
+                  }
+                });
+              }
+            }
+          });
+        }
+      } else {
+        EasyLoading.showError(json['message']);
+        emit(ScanqrLoaded(statusCode: statusCode, json: json, task: []));
+      }
+    });
   }
 }

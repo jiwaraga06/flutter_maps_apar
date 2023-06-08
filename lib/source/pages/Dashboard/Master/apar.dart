@@ -102,11 +102,15 @@ class _AparState extends State<Apar> {
               var json = state.json;
               if (json['isService'] == 1) {
                 setState(() {
-                  isService = !isService;
+                  isService = true;
                 });
-              } else {
+              } else if (json['isService'] == 0) {
                 setState(() {
-                  isService = !isService;
+                  isService = false;
+                });
+              } else if (json['isService'] == null) {
+                setState(() {
+                  isService = false;
                 });
               }
             }

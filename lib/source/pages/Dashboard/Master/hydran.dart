@@ -94,13 +94,17 @@ class _HydranState extends State<Hydran> {
           listener: (context, state) {
             if (state is HydranLoaded) {
               var json = state.json;
-              if (json['isService'] == 1) {
+               if (json['isService'] == 1) {
                 setState(() {
-                  isService = !isService;
+                  isService = true;
                 });
-              } else {
+              } else if (json['isService'] == 0) {
                 setState(() {
-                  isService = !isService;
+                  isService = false;
+                });
+              } else if (json['isService'] == null) {
+                setState(() {
+                  isService = false;
                 });
               }
             }
