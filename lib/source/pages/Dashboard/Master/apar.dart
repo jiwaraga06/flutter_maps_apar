@@ -176,13 +176,13 @@ class _AparState extends State<Apar> {
                         if (json['aktif'] == null) Text("Tidak Aktif", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.red[600])),
                       ]),
                       TableRow(children: [
-                        const Text('Ket. Service', style: TextStyle(fontSize: 16)),
+                        const Text('St. Service', style: TextStyle(fontSize: 16)),
                         const Text(':', style: TextStyle(fontSize: 16)),
                         if (json['isService'] == 1)
-                          Text("Sudah Service", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.green[600])),
-                        if (json['isService'] == 0) Text("Belum Service", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.red[600])),
+                          Text("Sedang Perbaikan", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.green[600])),
+                        if (json['isService'] == 0) Text("Tersedia di Area", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.red[600])),
                         if (json['isService'] == null)
-                          Text("Belum Service", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.red[600])),
+                          Text("Tersedia di Area", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.red[600])),
                       ]),
                       TableRow(children: [
                         const Text('Kapasitas', style: TextStyle(fontSize: 16)),
@@ -253,8 +253,8 @@ class _AparState extends State<Apar> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      if (isService == true) const Text('Sudah Service', style: TextStyle(fontSize: 17)),
-                      if (isService == false) const Text('Belum Service', style: TextStyle(fontSize: 17)),
+                      if (isService == true) const Text('Update St Service', style: TextStyle(fontSize: 17)),
+                      if (isService == false) const Text('Update St Service', style: TextStyle(fontSize: 17)),
                       FlutterSwitch(
                         activeColor: color2,
                         inactiveColor: colorBtnCancel,

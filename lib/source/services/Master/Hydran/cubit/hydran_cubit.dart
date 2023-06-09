@@ -47,28 +47,29 @@ class HydranCubit extends Cubit<HydranState> {
     SharedPreferences pref = await SharedPreferences.getInstance();
     var radius = int.parse(pref.getString('radius').toString());
     String barcodeScanRes;
-    try {
-      barcodeScanRes = await FlutterBarcodeScanner.scanBarcode('#332FD0', 'Cancel', true, ScanMode.QR);
-      print('Result: $barcodeScanRes');
-      if (barcodeScanRes == '-1') {
-        EasyLoading.showInfo('Di Batalkan');
-      } else {
-        // emit(AparId(idApar: barcodeScanRes));
-        var ref = barcodeScanRes.split('/')[barcodeScanRes.split('/').length - 2];
-        var inisial = barcodeScanRes.split('/')[barcodeScanRes.split('/').length - 1];
-        if (inisial != 'H') {
-          MyDialog.dialogAlert(context, 'QR Code Hydran Tidak Sesuai');
+    await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.bestForNavigation, timeLimit: const Duration(seconds: 20)).then((position) async {
+      try {
+        barcodeScanRes = await FlutterBarcodeScanner.scanBarcode('#332FD0', 'Cancel', true, ScanMode.QR);
+        print('Result: $barcodeScanRes');
+        if (barcodeScanRes == '-1') {
+          EasyLoading.showInfo('Di Batalkan');
         } else {
-          myRepository!.getmasterhydranedit(ref).then((value) async {
-            var json = jsonDecode(value.body);
-            var statusCode = value.statusCode;
-            print('JSON: $json');
-            if (json.isNotEmpty) {
-              latiHydran = json['lati'];
-              longiHydran = json['longi'];
-            }
-            EasyLoading.show();
-            await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.bestForNavigation).then((position) async {
+          // emit(AparId(idApar: barcodeScanRes));
+          var ref = barcodeScanRes.split('/')[barcodeScanRes.split('/').length - 2];
+          var inisial = barcodeScanRes.split('/')[barcodeScanRes.split('/').length - 1];
+          if (inisial != 'H') {
+            MyDialog.dialogAlert(context, 'QR Code Hydran Tidak Sesuai');
+          } else {
+            myRepository!.getmasterhydranedit(ref).then((value) async {
+              var json = jsonDecode(value.body);
+              var statusCode = value.statusCode;
+              print('JSON: $json');
+              if (json.isNotEmpty) {
+                latiHydran = json['lati'];
+                longiHydran = json['longi'];
+              }
+              EasyLoading.show();
+
               var latitude = position.latitude;
               var longitude = position.longitude;
               var akurasi = position.accuracy;
@@ -101,11 +102,11 @@ class HydranCubit extends Cubit<HydranState> {
                 }
               }
             });
-          });
+          }
         }
+      } on PlatformException {
+        EasyLoading.showError('Failed to get Platform version .');
       }
-    } on PlatformException {
-      EasyLoading.showError('Failed to get Platform version .');
-    }
+    });
   }
 }

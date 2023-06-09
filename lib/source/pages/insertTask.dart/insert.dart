@@ -107,6 +107,9 @@ class _InsertState extends State<Insert> {
   @override
   void initState() {
     super.initState();
+    setState(() {
+      base64String = '';
+    });
     date = DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now());
     print(date);
     print("status ${widget.status}");

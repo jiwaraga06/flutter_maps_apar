@@ -1,6 +1,8 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:bloc/bloc.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -38,8 +40,10 @@ class AparCubit extends Cubit<AparState> {
     });
   }
 
-  void initial() {
+  void initial() async {
     emit(AparLoaded(statusCode: 0, json: {}));
+    // Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high, timeLimit: const Duration(seconds: 10));
+    // Position position = await Geolocator.get
   }
 
   var latiApar, longiApar;
@@ -48,28 +52,31 @@ class AparCubit extends Cubit<AparState> {
     var radius = double.parse(pref.getString('radius').toString());
     print('Radius API : $radius');
     String barcodeScanRes;
-    try {
-      barcodeScanRes = await FlutterBarcodeScanner.scanBarcode('#332FD0', 'Cancel', true, ScanMode.QR);
-      print('Result: $barcodeScanRes');
-      if (barcodeScanRes == '-1') {
-        EasyLoading.showInfo('Di Batalkan');
-      } else {
-        // emit(AparId(idApar: barcodeScanRes));
-        var ref = barcodeScanRes.split('/')[barcodeScanRes.split('/').length - 2];
-        var inisial = barcodeScanRes.split('/')[barcodeScanRes.split('/').length - 1];
-        if (inisial != 'A') {
-          MyDialog.dialogAlert(context, 'QR Code Apar Tidak Sesuai');
+    await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.bestForNavigation, timeLimit: const Duration(seconds: 20)).then((position) async {
+      try {
+        barcodeScanRes = await FlutterBarcodeScanner.scanBarcode('#332FD0', 'Cancel', true, ScanMode.QR);
+        print('Result: $barcodeScanRes');
+
+        if (barcodeScanRes == '-1') {
+          EasyLoading.showInfo('Di Batalkan');
         } else {
-          myRepository!.getmasteraparedit(ref).then((value) async {
-            var json = jsonDecode(value.body);
-            var statusCode = value.statusCode;
-            print('JSON apar: $json');
-            if (json.isNotEmpty) {
-              latiApar = json['lati'];
-              longiApar = json['longi'];
-            }
-            EasyLoading.show();
-            await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.bestForNavigation).then((position) async {
+          // emit(AparId(idApar: barcodeScanRes));
+          var ref = barcodeScanRes.split('/')[barcodeScanRes.split('/').length - 2];
+          var inisial = barcodeScanRes.split('/')[barcodeScanRes.split('/').length - 1];
+          if (inisial != 'A') {
+            MyDialog.dialogAlert(context, 'QR Code Apar Tidak Sesuai');
+          } else {
+            myRepository!.getmasteraparedit(ref).then((value) async {
+              var json = jsonDecode(value.body);
+              var statusCode = value.statusCode;
+              print('JSON apar: $json');
+              if (json.isNotEmpty) {
+                latiApar = json['lati'];
+                longiApar = json['longi'];
+              }
+
+              EasyLoading.show();
+
               var latitude = position.latitude;
               var longitude = position.longitude;
               var akurasi = position.accuracy;
@@ -103,11 +110,11 @@ class AparCubit extends Cubit<AparState> {
                 }
               }
             });
-          });
+          }
         }
+      } on PlatformException {
+        EasyLoading.showError('Failed to get Platform version .');
       }
-    } on PlatformException {
-      EasyLoading.showError('Failed to get Platform version .');
-    }
+    });
   }
 }

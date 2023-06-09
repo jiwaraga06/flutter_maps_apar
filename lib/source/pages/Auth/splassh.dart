@@ -25,9 +25,10 @@ class _SplashScreenState extends State<SplashScreen> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
-        children: const [
-          SizedBox(height: 12.0),
-          CircularProgressIndicator(),
+        children: [
+          const SizedBox(height: 12.0),
+          Image.asset("assets/logoapar.png", height: 150),
+          const CircularProgressIndicator(),
         ],
       ),
     ));
