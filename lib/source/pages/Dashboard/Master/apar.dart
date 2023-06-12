@@ -179,10 +179,10 @@ class _AparState extends State<Apar> {
                         const Text('St. Service', style: TextStyle(fontSize: 16)),
                         const Text(':', style: TextStyle(fontSize: 16)),
                         if (json['isService'] == 1)
-                          Text("Sedang Perbaikan", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.green[600])),
-                        if (json['isService'] == 0) Text("Tersedia di Area", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.red[600])),
+                          Text("Sedang Perbaikan", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.red[600])),
+                        if (json['isService'] == 0) Text("Tersedia di Area", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.green[600])),
                         if (json['isService'] == null)
-                          Text("Tersedia di Area", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.red[600])),
+                          Text("Tersedia di Area", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.green[600])),
                       ]),
                       TableRow(children: [
                         const Text('Kapasitas', style: TextStyle(fontSize: 16)),
