@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:bloc/bloc.dart';
 import 'package:flutter_maps_apar/source/repository/repository.dart';
 import 'package:flutter_maps_apar/source/services/Master/Hydran/cubit/hydran_cubit.dart';
+import 'package:flutter_maps_apar/source/services/env.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:meta/meta.dart';
 
@@ -44,7 +45,7 @@ class EdithydranCubit extends Cubit<EdithydranState> {
         };
         print("Body Koordinat true: $body");
         emit(EdithydranAkurasi(accuracy: akurasi));
-        if (akurasi <= 20.0) {
+        if (akurasi <= ACCURACY) {
           myRepository!.putmasterhydran(uuid, jsonEncode(body)).then((value) {
             var json = jsonDecode(value.body);
             var statusCode = value.statusCode;

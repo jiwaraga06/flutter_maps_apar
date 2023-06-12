@@ -3,6 +3,7 @@ import 'dart:ffi';
 
 import 'package:bloc/bloc.dart';
 import 'package:flutter_maps_apar/source/repository/repository.dart';
+import 'package:flutter_maps_apar/source/services/env.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:meta/meta.dart';
 
@@ -42,7 +43,7 @@ class EditaparCubit extends Cubit<EditaparState> {
         };
         print('Body Koordinat true: $body');
         emit(EditaparAkurasi(accuracy: akurasi));
-        if (akurasi <= 20.0) {
+        if (akurasi <= ACCURACY) {
           myRepository!.putmasterapar(uuid, jsonEncode(body)).then((value) {
             var json = jsonDecode(value.body);
             var statusCode = value.statusCode;

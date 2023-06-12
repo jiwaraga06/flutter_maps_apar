@@ -17,7 +17,7 @@ class InsertaskCubit extends Cubit<InsertaskState> {
   void saveTask(ref, inisial, datalist, datatask) async {
     emit(InsertaskLoading());
     SharedPreferences pref = await SharedPreferences.getInstance();
-    var username = pref.getString('username');
+    var nama = pref.getString('nama');
     DateTime date = DateTime.now();
     var tanggal = date.toString().split(' ')[0];
 
@@ -28,7 +28,7 @@ class InsertaskCubit extends Cubit<InsertaskState> {
     } else {
     var body = {
       "tanggal": "$tanggal",
-      "user": "$username",
+      "user": "$nama",
       "references": "$ref",
       "initial": "$inisial",
       "data_list": datalist,

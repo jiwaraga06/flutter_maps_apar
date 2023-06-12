@@ -7,6 +7,7 @@ import 'package:flutter_maps_apar/source/router/string.dart';
 import 'package:flutter_maps_apar/source/services/Master/Apar/cubit/apar_cubit.dart';
 import 'package:flutter_maps_apar/source/services/Master/Apar/cubit/editapar_cubit.dart';
 import 'package:flutter_maps_apar/source/services/Master/Apar/cubit/jenisapar_cubit.dart';
+import 'package:flutter_maps_apar/source/services/env.dart';
 import 'package:flutter_maps_apar/source/widget/color.dart';
 import 'package:flutter_maps_apar/source/widget/customButton.dart';
 import 'package:flutter_maps_apar/source/widget/customDialog.dart';
@@ -75,7 +76,7 @@ class _AparState extends State<Apar> {
           }
           if (state is EditaparAkurasi) {
             var akurasi = state.accuracy;
-            if (akurasi! > 20) {
+            if (akurasi! > ACCURACY) {
               EasyLoading.dismiss();
               MyDialog.dialogAlert(context, 'Akurasi anda : $akurasi\nAkurasi tidak boleh lebih dari 20m');
               BlocProvider.of<AparCubit>(context).initial();

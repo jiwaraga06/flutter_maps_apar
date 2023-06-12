@@ -5,6 +5,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_maps_apar/source/pages/Dashboard/Master/edithydran.dart';
 import 'package:flutter_maps_apar/source/services/Master/Hydran/cubit/edithydran_cubit.dart';
 import 'package:flutter_maps_apar/source/services/Master/Hydran/cubit/hydran_cubit.dart';
+import 'package:flutter_maps_apar/source/services/env.dart';
 import 'package:flutter_maps_apar/source/widget/color.dart';
 import 'package:flutter_maps_apar/source/widget/customButton.dart';
 import 'package:flutter_maps_apar/source/widget/customDialog.dart';
@@ -70,7 +71,7 @@ class _HydranState extends State<Hydran> {
           }
           if (state is EdithydranAkurasi) {
             var akurasi = state.accuracy;
-            if (akurasi! > 20) {
+            if (akurasi! > ACCURACY) {
               EasyLoading.dismiss();
               MyDialog.dialogAlert(context, 'Akurasi anda : $akurasi\nAkurasi tidak boleh lebih dari 20m');
               BlocProvider.of<HydranCubit>(context).initial();

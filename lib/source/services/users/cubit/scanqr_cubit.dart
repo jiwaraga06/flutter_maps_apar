@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_maps_apar/source/repository/repository.dart';
+import 'package:flutter_maps_apar/source/services/env.dart';
 import 'package:flutter_maps_apar/source/widget/customDialog.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:meta/meta.dart';
@@ -97,11 +98,11 @@ class ScanqrCubit extends Cubit<ScanqrState> {
           print("Longitude: $longiUser, Latitude: $latiUser, Akurasi: $akurasi");
           var distance = Geolocator.distanceBetween(lati, longi, latiUser, longiUser);
           print('Distance: $distance');
-          if (akurasi > 20) {
+          if (akurasi > ACCURACY) {
             if (distance >= radius) {
               MyDialog.dialogAlert(context, 'Akurasi dan Jarak Anda terlalu jauh\nAkurasi : $akurasi\nJarak : $distance');
             } else {
-              MyDialog.dialogAlert(context, 'Akurasi anda : $akurasi\nAkurasi tidak boleh lebih dari 20 m');
+              MyDialog.dialogAlert(context, 'Akurasi anda : $akurasi\nAkurasi tidak boleh lebih dari $ACCURACY m');
             }
           } else {
             if (distance >= radius) {

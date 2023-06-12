@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_maps_apar/source/repository/repository.dart';
+import 'package:flutter_maps_apar/source/services/env.dart';
 import 'package:flutter_maps_apar/source/widget/customDialog.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:meta/meta.dart';
@@ -83,8 +84,8 @@ class AparCubit extends Cubit<AparState> {
               EasyLoading.dismiss();
               print('Latitude: $latitude, Longitude: $longitude, accuracy: $akurasi');
               if (json['lati'] == null && json['longi'] == null) {
-                if (akurasi > 20) {
-                  MyDialog.dialogAlert(context, 'Akurasi anda : $akurasi\nAkurasi tidak boleh lebih dari 20 m');
+                if (akurasi > ACCURACY) {
+                  MyDialog.dialogAlert(context, 'Akurasi anda : $akurasi\nAkurasi tidak boleh lebih dari $ACCURACY m');
                 } else {
                   emit(AparLoading());
                   emit(AparLoaded(statusCode: statusCode, json: json));
@@ -93,11 +94,11 @@ class AparCubit extends Cubit<AparState> {
                 var distance = Geolocator.distanceBetween(latiApar, longiApar, latitude, longitude);
                 print('Distance: $distance');
 
-                if (akurasi > 20) {
+                if (akurasi > ACCURACY) {
                   if (distance >= radius) {
                     MyDialog.dialogAlert(context, 'Akurasi dan Jarak Anda terlalu jauh\nAkurasi : $akurasi\nJarak : $distance');
                   } else {
-                    MyDialog.dialogAlert(context, 'Akurasi anda : $akurasi\nAkurasi tidak boleh lebih dari 20 m');
+                    MyDialog.dialogAlert(context, 'Akurasi anda : $akurasi\nAkurasi tidak boleh lebih dari $ACCURACY m');
                     emit(AparLoaded(statusCode: 0, json: {}));
                   }
                 } else {
