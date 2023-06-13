@@ -78,7 +78,7 @@ class _AparState extends State<Apar> {
             var akurasi = state.accuracy;
             if (akurasi! > ACCURACY) {
               EasyLoading.dismiss();
-              MyDialog.dialogAlert(context, 'Akurasi anda : $akurasi\nAkurasi tidak boleh lebih dari 20m');
+              MyDialog.dialogAlert(context, 'Akurasi anda : $akurasi\nAkurasi tidak boleh lebih dari $ACCURACY m');
               BlocProvider.of<AparCubit>(context).initial();
             } else {
               // BlocProvider.of<AparCubit>(context).initial();

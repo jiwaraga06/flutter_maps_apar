@@ -73,7 +73,7 @@ class _HydranState extends State<Hydran> {
             var akurasi = state.accuracy;
             if (akurasi! > ACCURACY) {
               EasyLoading.dismiss();
-              MyDialog.dialogAlert(context, 'Akurasi anda : $akurasi\nAkurasi tidak boleh lebih dari 20m');
+              MyDialog.dialogAlert(context, 'Akurasi anda : $akurasi\nAkurasi tidak boleh lebih dari $ACCURACY m');
               BlocProvider.of<HydranCubit>(context).initial();
             } else {
               BlocProvider.of<HydranCubit>(context).initial();
