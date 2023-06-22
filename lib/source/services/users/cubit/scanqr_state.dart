@@ -15,8 +15,9 @@ class ScanqrAkurasi extends ScanqrState {
 
 class ScanqrLoaded extends ScanqrState {
   final int? statusCode;
+  final String? jenisQR;
   dynamic json;
   dynamic task;
 
-  ScanqrLoaded({this.statusCode, this.json, this.task});
+  ScanqrLoaded({this.statusCode, this.json, this.task, this.jenisQR});
 }

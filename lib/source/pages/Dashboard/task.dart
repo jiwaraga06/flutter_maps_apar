@@ -205,7 +205,7 @@ class _UserState extends State<User> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: const [
-                  Text('Silahkan Pindai Kode QR pada Apar'),
+                  Text('Silahkan Pindai Kode QR'),
                   Text('Untuk Melakukan Pemeriksaan'),
                 ],
               ),
@@ -213,14 +213,15 @@ class _UserState extends State<User> {
           }
           var task = (state as ScanqrLoaded).task;
           var json = (state as ScanqrLoaded).json;
+          var jenisQR = (state as ScanqrLoaded).jenisQR;
           var statusCode = (state as ScanqrLoaded).statusCode;
           if (json.isEmpty && task.isEmpty) {
             return Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: const [
-                  Text('Silahkan Pindai Kode QR pada Apar'),
-                  Text('Untuk Melakukan Pemeriksaan'),
+                children: [
+                  Text('Silahkan Pindai Kode QR $jenisQR'),
+                  const Text('Untuk Melakukan Pemeriksaan'),
                 ],
               ),
             );
@@ -228,9 +229,9 @@ class _UserState extends State<User> {
             return Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: const [
-                  Text('Tidak Ada Task Pada Apar Ini'),
-                  Text('Tidak Ada Untuk Melakukan Pemeriksaan'),
+                children: [
+                  Text('Tidak Ada Task Pada $jenisQR'),
+                  const Text('Tidak Ada Untuk Melakukan Pemeriksaan'),
                 ],
               ),
             );

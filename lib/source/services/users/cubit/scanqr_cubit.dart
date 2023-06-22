@@ -49,7 +49,7 @@ class ScanqrCubit extends Cubit<ScanqrState> {
                 EasyLoading.dismiss();
                 latitudeMenu = json['lati'];
                 longitudeMenu = json['longi'];
-                resultTask(radius, ref, inisial, latitudeMenu, longitudeMenu, latiUser, longiUser, akurasi, context);
+                resultTask("Apar", radius, ref, inisial, latitudeMenu, longitudeMenu, latiUser, longiUser, akurasi, context);
               }
             });
           } else if (inisial == 'H') {
@@ -63,7 +63,7 @@ class ScanqrCubit extends Cubit<ScanqrState> {
                 EasyLoading.dismiss();
                 latitudeMenu = json['lati'];
                 longitudeMenu = json['longi'];
-                resultTask(radius, ref, inisial, latitudeMenu, longitudeMenu, latiUser, longiUser, akurasi, context);
+                resultTask("Hydran", radius, ref, inisial, latitudeMenu, longitudeMenu, latiUser, longiUser, akurasi, context);
               }
             });
           }
@@ -76,10 +76,10 @@ class ScanqrCubit extends Cubit<ScanqrState> {
   }
 
   void inisialisasi() {
-    emit(ScanqrLoaded(json: {}, task: {}));
+    emit(ScanqrLoaded(json: {}, task: {}, jenisQR: ""));
   }
 
-  void resultTask(radius, ref, inisial, lati, longi, latiUser, longiUser, accuracy, context) async {
+  void resultTask(jenisQR, radius, ref, inisial, lati, longi, latiUser, longiUser, accuracy, context) async {
     myRepository!.scanqr(ref, inisial).then((value) async {
       var json = jsonDecode(value.body);
       var statusCode = value.statusCode;
@@ -91,7 +91,7 @@ class ScanqrCubit extends Cubit<ScanqrState> {
         if (json['errors'] != null) {
           emit(ScanqrLoading());
           EasyLoading.showError('Unit Sedang di Service');
-          emit(ScanqrLoaded(statusCode: statusCode, json: json, task: []));
+          emit(ScanqrLoaded(statusCode: statusCode, json: json, task: [], jenisQR: jenisQR));
         } else {
           // LOKASI< HITUNG JARAK
           var akurasi = accuracy;
@@ -113,9 +113,9 @@ class ScanqrCubit extends Cubit<ScanqrState> {
                 if (b is Map) {
                   task.add(b);
                   print(task);
-                  emit(ScanqrLoaded(statusCode: statusCode, json: json, task: task));
+                  emit(ScanqrLoaded(statusCode: statusCode, json: json, task: task, jenisQR: jenisQR));
                 } else {
-                  emit(ScanqrLoaded(statusCode: statusCode, json: json, task: []));
+                  emit(ScanqrLoaded(statusCode: statusCode, json: json, task: [], jenisQR: jenisQR));
                 }
               });
             }
@@ -123,7 +123,7 @@ class ScanqrCubit extends Cubit<ScanqrState> {
         }
       } else {
         EasyLoading.showError(json['message']);
-        emit(ScanqrLoaded(statusCode: statusCode, json: json, task: []));
+        emit(ScanqrLoaded(statusCode: statusCode, json: json, task: [], jenisQR: ""));
       }
     });
   }
